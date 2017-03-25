@@ -1,0 +1,24 @@
+// This file specifies a red node moving left to right across the 
+// 3 nodes in the top row and disappearing in the final grid.
+// Each grid should appear in 1 second increments.
+0.1 // The program version number
+NoAudioFile // No audio file associated with the tang file
+255 0 0 // The value in RGB (red) for the current state of the color wheel
+169 169 169 128 128 0 139 0 139 0 139 139 0 0 139 0 100 0 139 0 0 0 0 0 128 128 128 255 255 0 255 0 255 0 255 255 0 0 255 0 128 0 255 0 0 255 255 255 // The values in RGB of the 16 recently used colors
+4 3 3 // The number of grids (4) and the dimensions of all grids in the file (3x3)
+0 // The time (in milliseconds) in the sequence of grids when this grid will appear
+255 0 0 0 0 0 0 0 0 // A 3 node row represented by space-delimited RGB values (same below)
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+1000 // The time (in milliseconds) in the sequence of grids when this grid will appear
+0 0 0 255 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+2000 // The time (in milliseconds) in the sequence of grids when this grid will appear
+0 0 0 0 0 0 255 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+3000 // The time (in milliseconds) in the sequence of grids when this grid will appear
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
