@@ -18,11 +18,19 @@ import javax.swing.JCheckBoxMenuItem;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
+import javax.swing.JFileChooser;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GridEditorGui extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel gridPanel;
+	private final JFileChooser openFileChooser;
 	private int gridRows = 10;
 	private int gridCols = 20;
 
@@ -54,6 +62,13 @@ public class GridEditorGui extends JFrame {
 		
 		
 		initComponents();
+		
+		openFileChooser = new JFileChooser();
+		// Line below allows you to set the directory the file chooser starts at. Uncomment and change path to use this feature
+		// Default should be users home directory I think...
+		// openFileChooser.setCurrentDirectory(new File("c:\\temp"));
+		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
+		
 		createEvents();
 		
 	}
@@ -89,6 +104,7 @@ public class GridEditorGui extends JFrame {
 			}
 		}
 		
+				
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -99,6 +115,21 @@ public class GridEditorGui extends JFrame {
 		mnFile.add(mntmNew);
 		
 		JMenuItem mntmOpen = new JMenuItem("Open");
+		mntmOpen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int returnValue = openFileChooser.showOpenDialog(mntmOpen);
+				
+				if (returnValue == JFileChooser.APPROVE_OPTION){
+					File tangFile = openFileChooser.getSelectedFile();
+					//TODO Pass file to parser or read method to read it into the program
+					System.out.println("Selected File: " + tangFile.getAbsolutePath());
+				}
+				else {
+					//TODO Add message to inform no file was selected
+					
+				}
+			}
+		});
 		mnFile.add(mntmOpen);
 		
 		JMenuItem mntmSave = new JMenuItem("Save");
