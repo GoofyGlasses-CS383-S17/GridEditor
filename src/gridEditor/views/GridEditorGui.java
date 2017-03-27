@@ -2,7 +2,6 @@ package gridEditor.views;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -21,18 +20,30 @@ import java.awt.Dimension;
 import javax.swing.JFileChooser;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
+
+import gridEditor.common.*;
 
 public class GridEditorGui extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel gridPanel;
-	private final JFileChooser openFileChooser;
-	private int gridRows = 10;
-	private int gridCols = 20;
+	private JFileChooser openFileChooser;
+	private int gridRows = 20;
+	private int gridCols = 10;
+	private JButton[][] btnGrid;
+	private JMenuItem mntmOpen;
+	private JMenuItem mntmNew;
+	private JMenuItem mntmSave;
+	private JMenuItem mntmSaveAs;
+	private JMenuItem mntmExit;
+	private JMenuItem mntmGridSize;
+	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
+	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
+	private JMenuItem mntmAbout;
 
 	/**
 	 * Launch the application.
@@ -63,11 +74,7 @@ public class GridEditorGui extends JFrame {
 		
 		initComponents();
 		
-		openFileChooser = new JFileChooser();
-		// Line below allows you to set the directory the file chooser starts at. Uncomment and change path to use this feature
-		// Default should be users home directory I think...
-		// openFileChooser.setCurrentDirectory(new File("c:\\temp"));
-		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
+		
 		
 		createEvents();
 		
@@ -89,18 +96,23 @@ public class GridEditorGui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
+		openFileChooser = new JFileChooser();
+		// Line below allows you to set the directory the file chooser starts at. Uncomment and change path to use this feature
+		// Default should be users home directory I think...
+		// openFileChooser.setCurrentDirectory(new File("c:\\temp"));
+		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
 		
 		
 		gridPanel = new JPanel();
 		contentPane.add(gridPanel);
 		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
 		
-		JButton[][] btnGrid = new JButton[gridRows][gridCols];
+		btnGrid = new JButton[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
 			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c] = new JButton();
-				btnGrid[r][c].setPreferredSize(new Dimension(200, 200));
-				gridPanel.add(new JButton());
+				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
+				btnGrid[r][c].setPreferredSize(new Dimension(75, 25));
+				gridPanel.add(btnGrid[r][c]);
 			}
 		}
 		
@@ -111,46 +123,31 @@ public class GridEditorGui extends JFrame {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
-		JMenuItem mntmNew = new JMenuItem("New");
+		mntmNew = new JMenuItem("New");
 		mnFile.add(mntmNew);
 		
-		JMenuItem mntmOpen = new JMenuItem("Open");
-		mntmOpen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int returnValue = openFileChooser.showOpenDialog(mntmOpen);
-				
-				if (returnValue == JFileChooser.APPROVE_OPTION){
-					File tangFile = openFileChooser.getSelectedFile();
-					//TODO Pass file to parser or read method to read it into the program
-					System.out.println("Selected File: " + tangFile.getAbsolutePath());
-				}
-				else {
-					//TODO Add message to inform no file was selected
-					
-				}
-			}
-		});
+		mntmOpen = new JMenuItem("Open");
 		mnFile.add(mntmOpen);
 		
-		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave = new JMenuItem("Save");
 		mnFile.add(mntmSave);
 		
-		JMenuItem mntmSaveAs = new JMenuItem("Save as...");
+		mntmSaveAs = new JMenuItem("Save as...");
 		mnFile.add(mntmSaveAs);
 		
-		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit = new JMenuItem("Exit");
 		mnFile.add(mntmExit);
 		
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		
-		JMenuItem mntmGridSize = new JMenuItem("Grid Size");
+		mntmGridSize = new JMenuItem("Grid Size");
 		mnEdit.add(mntmGridSize);
 		
-		JCheckBoxMenuItem chckbxmntmSingleNodeMode = new JCheckBoxMenuItem("Single Node Mode");
+		chckbxmntmSingleNodeMode = new JCheckBoxMenuItem("Single Node Mode");
 		mnEdit.add(chckbxmntmSingleNodeMode);
 		
-		JCheckBoxMenuItem chckbxmntmMultiNodeMode = new JCheckBoxMenuItem("Multi Node Mode");
+		chckbxmntmMultiNodeMode = new JCheckBoxMenuItem("Multi Node Mode");
 		mnEdit.add(chckbxmntmMultiNodeMode);
 		
 		JMenu mnWindow = new JMenu("Window");
@@ -159,7 +156,7 @@ public class GridEditorGui extends JFrame {
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
-		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
 		
 		
@@ -170,7 +167,82 @@ public class GridEditorGui extends JFrame {
 	// events.
 	////////////////////////////////////////////////////
 	private void createEvents() {
-		// TODO Auto-generated method stub
+		// TODO Double check to make sure all event handlers for the gui are handled
 		
+		/////////////////////////////////////////////////
+		// Event Handlers for the "File" Menu
+		////////////////////////////////////////////////
+		
+		// New File handler
+		mntmNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		//TODO Code to create new TANG file
+			}
+		});
+		
+		// Open File handler
+		mntmOpen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int returnValue = openFileChooser.showOpenDialog(mntmOpen);
+				
+				if (returnValue == JFileChooser.APPROVE_OPTION){
+					File tangFile = openFileChooser.getSelectedFile();
+					// TODO Pass file to parser or read method to read it into the program
+					// TODO add try catch to catch exceptions from invalid file formats 
+					System.out.println("Selected File: " + tangFile.getAbsolutePath());
+				}
+				else {
+					//TODO Add message to inform no file was selected
+					System.out.println("No file selected");
+				}
+			}
+		});
+		
+		// Save File handler
+		mntmSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		//TODO add code for saving tang file		
+			}
+		});
+		
+		// Save as file handler
+		mntmSaveAs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		// TODO add code for the Save as function	
+			}
+		});
+		
+		// Exit handler
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		// TODO Check if current file is "saved" before exit		
+				System.exit(0);
+			}
+		});
+		
+		////////////////////////////////////////////////////////
+		// Event Handlers for the "Edit" Menu
+		////////////////////////////////////////////////////////
+		
+		// Grid Size Event Handler
+		mntmGridSize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		// TODO code to adjust grid size		
+			}
+		});
+	
+		
+		////////////////////////////////////////////////////////
+		// node buttons
+		////////////////////////////////////////////////////////
+		for(int r = 0; r < gridRows; r++){
+			for(int c = 0; c < gridCols; c++){
+				btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
+					public void actionPerformed(ActionEvent e){
+						System.out.println("Button Row = " + this.getRow()  + " Column =  " + this.getCol());
+					}
+				});
+			}
+		}
 	}
 }
