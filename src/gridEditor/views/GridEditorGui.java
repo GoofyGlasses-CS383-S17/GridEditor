@@ -97,9 +97,8 @@ public class GridEditorGui extends JFrame {
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		openFileChooser = new JFileChooser();
-		// Line below allows you to set the directory the file chooser starts at. Uncomment and change path to use this feature
-		// Default should be users home directory I think...
-		// openFileChooser.setCurrentDirectory(new File("c:\\temp"));
+		// Sets directory to user's home directory
+		openFileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
 		
 		
