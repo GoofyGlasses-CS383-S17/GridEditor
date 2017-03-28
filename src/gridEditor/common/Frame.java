@@ -1,4 +1,4 @@
-//Node class
+//Frame class
 //Initially created 03/27/2017
 
 package gridEditor.common;
@@ -16,7 +16,7 @@ public class Frame {
 	//copy constructor
 	public Frame(Frame old){
 		nodes=old.getNodeGrid();
-		frameNum=old.getFrameNum();
+		frameNum=old.getFrameNum()+1;
 		duration=old.getDuration();
 		startingTime=old.getStartingTime()+duration;
 	}
