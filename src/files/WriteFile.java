@@ -16,17 +16,15 @@ public class WriteFile {
 	public static void writeFile(String filename, ArrayList<Frame> grid) {
 		int gridCount = grid.size();
 		Frame oneFrame;
-		Node[][] oneNode;
- 
-		oneFrame = new Frame();
-		oneFrame = grid.get(0);
-		oneNode = new Node[gridCount][];
-		oneNode = oneFrame.getNodeGrid();
-		
-		int rows= oneNode.length;
-		int columns = oneNode[0].length;
+		Node[][] oneNode = new Node[gridCount][];
 		Color tempColor;
 		
+		
+		//retrieving rows and columns from first Frame in the ArrayList
+		oneFrame = new Frame();
+		oneFrame = grid.get(0);
+		int rows = oneFrame.getHeight();
+		int columns = oneFrame.getWidth();
 
 		// write to file
 		try {
@@ -48,16 +46,15 @@ public class WriteFile {
 		writer.write(Integer.toString(columns));
 		writer.newLine();
 		
-		//grid time and grid lines
+		//writing startTime of Frame and Frame Node Color values
 		for(int i = 0; i<gridCount; i++) {
-			oneFrame = new Frame();
+			//breaking down Frame to get Color values
 			oneFrame = grid.get(i);
-			oneNode = new Node[gridCount][];
 			oneNode = oneFrame.getNodeGrid();
 			//line for start time
 			writer.write(Integer.toString(oneFrame.getDuration()));
 			writer.newLine();
-			//loop for writing grid
+			//loop for writing Frame
 			for(int j = 0; j<rows; j++) {
 				for(int k = 0; k < columns; k++) {
 					tempColor = oneNode[j][k].getColor();
