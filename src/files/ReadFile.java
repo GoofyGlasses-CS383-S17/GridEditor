@@ -2,15 +2,22 @@ package files;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import gridEditor.common.Color;
+import gridEditor.common.Frame;
+import gridEditor.common.Node;
 
 public class ReadFile {
 	
-	public static void main(String filename) {
+	public static void readFile(String filename, ArrayList<Frame> grid) {
 		String line;
 		String[] tempArray;
-		Integer[][] grid = null;
-		int startTime, totalCount;
+		Frame tempFrame;
+		Node tempNode;
+		Node[][] tempNodeArr;
+		Color tempColor;
  
 		try 
 		{
@@ -29,26 +36,37 @@ public class ReadFile {
 			int gridCount = Integer.parseInt(tempArray[0]);
 			int rows = Integer.parseInt(tempArray[1]);
 			int columns = Integer.parseInt(tempArray[2]);
-			grid = new Integer[rows][columns*3];
+			
+			
 			
 			// read in each grid, save startTime and grid of nodes to an array
 			for(int i=0; i<gridCount; i++) {
 				line = reader.readLine();
-				startTime = Integer.parseInt(line);
+				tempFrame = new Frame();
+				tempFrame.setStartingTime(Integer.parseInt(line));
 				for(int j=0; j<rows; j++){
 					line = reader.readLine();
 					tempArray = line.split(" ");
-					// columns*3=grid columns
-					totalCount = columns * 3;
 					// saving values to grid, note rows is at the value of j
-					for(int k=0; k<totalCount; k++) {
-						grid[j][k] = Integer.parseInt(tempArray[k]);
+					tempNodeArr = new Node[rows][columns];
+					for(int k=0; k<columns; k++) {
+						//retrieve color value
+						tempColor = new Color();
+						tempColor.setRed(Integer.parseInt(tempArray[k]));
+						tempColor.setGreen(Integer.parseInt(tempArray[(k*3)+1]));
+						tempColor.setBlue(Integer.parseInt(tempArray[(k*3)+2]));
+						//assign color to associated node
+						tempNode = new Node();
+						tempNode.setColor(tempColor);
+						tempNodeArr[j][k] = tempNode;
 					}
+					tempFrame.setFrameNum(i);
+					tempFrame.setNodeGrid(tempNodeArr);
 				}
-				//this is where you will do something with each grid
+				//add each Frame to the ArrayList<Frame> that was passed in
+				grid.add(tempFrame);
 				//TESTING for now
 				System.out.printf("\n");
-				System.out.println(Arrays.deepToString(grid));
 				System.out.printf("\n");
 			}
 		

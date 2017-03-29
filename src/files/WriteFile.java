@@ -13,12 +13,18 @@ import gridEditor.common.Node;
 public class WriteFile {
 	// use array list of the Frame objects
 	
-	public static void writeFile(String filename, Frame grid) {
-		int gridCount = 1;
-		Node[][] nodeOne = new Node[gridCount][];
-		nodeOne = grid.getNodeGrid();
-		int rows = 2;
-		int columns = 2;
+	public static void writeFile(String filename, ArrayList<Frame> grid) {
+		int gridCount = grid.size();
+		Frame oneFrame;
+		Node[][] oneNode;
+ 
+		oneFrame = new Frame();
+		oneFrame = grid.get(0);
+		oneNode = new Node[gridCount][];
+		oneNode = oneFrame.getNodeGrid();
+		
+		int rows= oneNode.length;
+		int columns = oneNode[0].length;
 		Color tempColor;
 		
 
@@ -44,13 +50,17 @@ public class WriteFile {
 		
 		//grid time and grid lines
 		for(int i = 0; i<gridCount; i++) {
+			oneFrame = new Frame();
+			oneFrame = grid.get(i);
+			oneNode = new Node[gridCount][];
+			oneNode = oneFrame.getNodeGrid();
 			//line for start time
-			writer.write(Integer.toString(grid.getDuration()));
+			writer.write(Integer.toString(oneFrame.getDuration()));
 			writer.newLine();
 			//loop for writing grid
 			for(int j = 0; j<rows; j++) {
 				for(int k = 0; k < columns; k++) {
-					tempColor = nodeOne[j][k].getColor();
+					tempColor = oneNode[j][k].getColor();
 					writer.write(Integer.toString(tempColor.getRed()));
 					writer.write(" ");
 					writer.write(Integer.toString(tempColor.getGreen()));
@@ -60,7 +70,6 @@ public class WriteFile {
 				}
 				writer.newLine();
 			}	
-			writer.write("end of grid\n");
 		}
 		//close file
 		writer.close();
