@@ -20,4 +20,22 @@ public class Color {
 		this.blue=blue;
 		this.green=green;
 	}
+	public int getRed(){
+		return this.red;
+	}
+	public int getGreen(){
+		return this.green;
+	}
+	public int getBlue(){
+		return this.blue;
+	}
+	public void setRed(int r){
+		this.red = r;
+	}
+	public void setGreen(int g){
+		this.green = g;
+	}
+	public void setBlue(int b){
+		this.blue = b;
+	}
 }
