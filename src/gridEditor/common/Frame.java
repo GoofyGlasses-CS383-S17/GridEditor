@@ -29,6 +29,12 @@ public class Frame {
 	public void setFrameNum(int newVal){
 		frameNum=newVal;
 	}
+	public int getWidth(){
+		return nodes.length;
+	}
+	public int getHeight(){
+		return nodes[0].length;
+	}
 	public int getStartingTime(){
 		return startingTime;
 	}
