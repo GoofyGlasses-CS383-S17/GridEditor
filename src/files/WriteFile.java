@@ -16,21 +16,26 @@ public class WriteFile {
 	public static void writeFile(String filename, ArrayList<Frame> grid) {
 		int gridCount = grid.size();
 		Frame oneFrame;
-		Node[][] oneNode = new Node[gridCount][];
+		Node[][] oneNode;
 		Color tempColor;
 		
 		
 		//retrieving rows and columns from first Frame in the ArrayList
 		oneFrame = new Frame();
 		oneFrame = grid.get(0);
-		int rows = oneFrame.getHeight();
-		int columns = oneFrame.getWidth();
+		//int rows = oneFrame.getHeight();
+		//int columns = oneFrame.getWidth();
+		//oneNode = new Node[rows][columns];
 
+		int rows = oneFrame.getWidth();
+		int columns = oneFrame.getHeight();
+		oneNode = new Node[rows][columns];
 		// write to file
 		try {
 		// open file
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		
+
 		//line 1, 2, 3, 4 fillers for first sprint
 		writer.write("0.0 //version number\n");
 		writer.write("noAudioFile\n");

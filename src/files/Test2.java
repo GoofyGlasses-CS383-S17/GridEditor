@@ -26,18 +26,20 @@ public class Test2 {
 		System.out.print("The (x,y) pair entered is: (" + x + "," + y + ")");
 		
 		
-		Color[][] color_matrix = new Color[x][y];
+		Node[][] color_matrix = new Node[x][y];
 		
 		for(int i = 0; i < x; i++)
 		{	
 			for(int j = 0; j < y; j++)
 			{	
-				color_matrix[i][j] = new Color();
+				color_matrix[i][j] = new Node();
 				Random rand = new Random();
-				int r = rand.nextInt(255);
-				int g = rand.nextInt(255);
-				int b = rand.nextInt(255);
-				color_matrix[i][j].setColor(r, g, b);
+				Color tempColor = new Color();
+				tempColor.setRed(rand.nextInt(255));
+				tempColor.setGreen(rand.nextInt(255));
+				tempColor.setBlue(rand.nextInt(255));
+				
+				color_matrix[i][j].setColor(tempColor);
 			}
 		}
 		/*
@@ -53,7 +55,9 @@ public class Test2 {
 			}
 		}
 		*/
+
 		System.out.print("\n");
+		/*
 		for(int i = 0; i < x; i++)
 		{	
 			for(int j = 0; j < y; j++)
@@ -66,8 +70,8 @@ public class Test2 {
 			}
 			
 		}
-		
-		
+		*/
+		/*
 		Node[][] node_matrix = new Node[x][y];
 		
 		for(int i = 0; i < x; i++)
@@ -79,6 +83,7 @@ public class Test2 {
 			}
 		}
 		
+		
 		Node[][] multiNode = new Node[x][y];
 		
 		for(int i = 0; i < x; i++)
@@ -88,12 +93,12 @@ public class Test2 {
 				multiNode[i][j] = node_matrix[i][j];
 			}
 		}
-		
+		*/
 		for(int z = 0; z < x*y; z++)
 		{
 			test = new Frame();
 			test.setDuration(z);
-			test.setNodeGrid(multiNode);
+			test.setNodeGrid(color_matrix);
 			testList.add(test);
 		}
 		
