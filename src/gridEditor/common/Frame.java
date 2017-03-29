@@ -30,10 +30,10 @@ public class Frame {
 		frameNum=newVal;
 	}
 	public int getWidth(){
-		return nodes.length;
+		return nodes[0].length;
 	}
 	public int getHeight(){
-		return nodes[0].length;
+		return nodes.length;
 	}
 	public int getStartingTime(){
 		return startingTime;

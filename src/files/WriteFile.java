@@ -23,13 +23,10 @@ public class WriteFile {
 		//retrieving rows and columns from first Frame in the ArrayList
 		oneFrame = new Frame();
 		oneFrame = grid.get(0);
-		//int rows = oneFrame.getHeight();
-		//int columns = oneFrame.getWidth();
-		//oneNode = new Node[rows][columns];
-
-		int rows = oneFrame.getWidth();
-		int columns = oneFrame.getHeight();
+		int rows = oneFrame.getHeight();
+		int columns = oneFrame.getWidth();
 		oneNode = new Node[rows][columns];
+
 		// write to file
 		try {
 		// open file
