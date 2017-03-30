@@ -31,6 +31,10 @@ import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.BoxLayout;
+import java.awt.Component;
 
 public class GridEditorGui extends JFrame {
 
@@ -39,6 +43,8 @@ public class GridEditorGui extends JFrame {
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
 	private int gridCols = 10;
+	private int gridCellWidth = 75;
+	private int gridCellHeight = 25;
 	private JButton[][] btnGrid;
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmNew;
@@ -51,7 +57,10 @@ public class GridEditorGui extends JFrame {
 	private JMenuItem mntmAbout;
 	private String currentFile;//stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
+//	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
+	private JPanel previewPanel;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -102,7 +111,6 @@ public class GridEditorGui extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		openFileChooser = new JFileChooser();
 		
@@ -167,15 +175,29 @@ public class GridEditorGui extends JFrame {
 			contentPane.remove(gridPanel);
 			contentPane.invalidate();
 		}
+		contentPane.setLayout(new BorderLayout(0, 0));
 		gridPanel = new JPanel();
-		contentPane.add(gridPanel);
+		contentPane.add(gridPanel, BorderLayout.NORTH);
 		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
+		
+		scrollPane = new JScrollPane();
+		contentPane.add(scrollPane, BorderLayout.SOUTH);
+		
+		previewPanel = new JPanel();
+		scrollPane.setViewportView(previewPanel);
+		
+		if (frames != null){
+			// btnFrame = new ArrayList<JButton>();
+			for(int f = 0; f < frames.size(); f++){
+				previewPanel.add(new JButton("Frame: " + f));
+			}
+		}
 		
 		btnGrid = new JButton[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
 			for(int c = 0; c < gridCols; c++){
 				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
-				btnGrid[r][c].setPreferredSize(new Dimension(75, 25));
+				btnGrid[r][c].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
 				gridPanel.add(btnGrid[r][c]);
 			}
 		}
