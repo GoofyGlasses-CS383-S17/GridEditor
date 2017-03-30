@@ -12,6 +12,11 @@ public class Frame {
 	}
 	public Frame(int width, int height){
 		nodes=new Node[width][height];
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				nodes[x][y]=new Node();
+			}
+		}
 	}
 	//copy constructor
 	public Frame(Frame old){

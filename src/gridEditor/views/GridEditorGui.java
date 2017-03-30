@@ -20,7 +20,12 @@ import java.awt.Dimension;
 import javax.swing.JFileChooser;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import files.ReadFile;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
@@ -44,6 +49,9 @@ public class GridEditorGui extends JFrame {
 	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
 	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
 	private JMenuItem mntmAbout;
+	private String currentFile;//stores currently opened file for saving purposes
+	private ArrayList<Frame> frames;
+	private int currentFrame=0;
 
 	/**
 	 * Launch the application.
@@ -102,20 +110,7 @@ public class GridEditorGui extends JFrame {
 		openFileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
 		
-		
-		gridPanel = new JPanel();
-		contentPane.add(gridPanel);
-		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
-		
-		btnGrid = new JButton[gridRows][gridCols];
-		for(int r = 0; r < gridRows; r++){
-			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
-				btnGrid[r][c].setPreferredSize(new Dimension(75, 25));
-				gridPanel.add(btnGrid[r][c]);
-			}
-		}
-		
+		initGrid();
 				
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -159,7 +154,51 @@ public class GridEditorGui extends JFrame {
 		mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
 		
+		if(frames==null){
+			frames=new ArrayList<Frame>();
+			frames.add(new Frame(gridCols, gridRows));
+		}
+	}
+	
+	//This method will be used to initialize the grid
+	//Called at the start, and when a file is opened
+	private void initGrid(){
+		if(gridPanel!=null){
+			contentPane.remove(gridPanel);
+			contentPane.invalidate();
+		}
+		gridPanel = new JPanel();
+		contentPane.add(gridPanel);
+		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
 		
+		btnGrid = new JButton[gridRows][gridCols];
+		for(int r = 0; r < gridRows; r++){
+			for(int c = 0; c < gridCols; c++){
+				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
+				btnGrid[r][c].setPreferredSize(new Dimension(75, 25));
+				gridPanel.add(btnGrid[r][c]);
+			}
+		}
+		contentPane.revalidate();
+		//TODO: repainting is probably not the best solution. Improve if/when possible
+		contentPane.repaint();
+	}
+
+	//This method creates the event handlers for the node buttons
+	//Called at start, and when a file is opened
+	private void createGridButtons(){
+		////////////////////////////////////////////////////////
+		// node buttons
+		////////////////////////////////////////////////////////
+		for(int r = 0; r < gridRows; r++){
+			for(int c = 0; c < gridCols; c++){
+				btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
+					public void actionPerformed(ActionEvent e){
+						System.out.println("Button Row = " + this.getRow()  + " Column =  " + this.getCol());
+					}
+				});
+			}
+		}
 	}
 	
 	////////////////////////////////////////////////////
@@ -186,10 +225,29 @@ public class GridEditorGui extends JFrame {
 				int returnValue = openFileChooser.showOpenDialog(mntmOpen);
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION){
-					File tangFile = openFileChooser.getSelectedFile();
-					// TODO Pass file to parser or read method to read it into the program
-					// TODO add try catch to catch exceptions from invalid file formats 
-					System.out.println("Selected File: " + tangFile.getAbsolutePath());
+					try{
+						File tangFile = openFileChooser.getSelectedFile();
+						currentFile=tangFile.getAbsolutePath();
+						System.out.println("Selected File: " + currentFile);
+						//Loads Frames from file into temp ArrayList
+						//If temp is empty do nothing
+						ArrayList<Frame> temp=new ArrayList<Frame>();
+						ReadFile.readFile(currentFile, temp);
+						if(temp.size()==0){
+							return;
+						}
+						//Re-initialize grid based off of values from file
+						frames=temp;
+						gridRows=frames.get(0).getHeight();
+						gridCols=frames.get(0).getWidth();
+						initGrid();
+						createGridButtons();
+						
+					}
+					catch(Exception e){
+						System.err.println("Error opening file!");
+						e.printStackTrace();
+					}
 				}
 				else {
 					//TODO Add message to inform no file was selected
@@ -230,19 +288,9 @@ public class GridEditorGui extends JFrame {
 		// TODO code to adjust grid size		
 			}
 		});
-	
 		
-		////////////////////////////////////////////////////////
-		// node buttons
-		////////////////////////////////////////////////////////
-		for(int r = 0; r < gridRows; r++){
-			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
-					public void actionPerformed(ActionEvent e){
-						System.out.println("Button Row = " + this.getRow()  + " Column =  " + this.getCol());
-					}
-				});
-			}
-		}
+		//node buttons
+		createGridButtons();
+	
 	}
 }
