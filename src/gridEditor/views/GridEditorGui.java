@@ -169,99 +169,7 @@ public class GridEditorGui extends JFrame {
 			frames.add(new Frame(gridCols, gridRows));
 		}
 	}
-	
-	//This method will be used to initialize the grid
-	//Called at the start, and when a file is opened
-	private void initGrid(){
-		if(gridPanel!=null){
-			contentPane.remove(gridPanel);
-			contentPane.invalidate();
-		}
-		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		contentPane.add(gridPanel, BorderLayout.NORTH);
-		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
-		
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		contentPane.add(scrollPane, BorderLayout.SOUTH);
-		
-		previewPanel = new JPanel();
-		scrollPane.setViewportView(previewPanel);
-		
-		if (frames != null){
-			// btnFrame = new ArrayList<JButton>();
-			for(int f = 0; f < frames.size(); f++){
-				previewPanel.add(new JButton("Frame: " + f));
-			}
-		}
-		
-		btnGrid = new JButton[gridRows][gridCols];
-		for(int r = 0; r < gridRows; r++){
-			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
-				btnGrid[r][c].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
-				gridPanel.add(btnGrid[r][c]);
-			}
-		}
-		contentPane.revalidate();
-		//TODO: repainting is probably not the best solution. Improve if/when possible
-		contentPane.repaint();
-	}
-
-	//This method creates the event handlers for the node buttons
-	//Called at start, and when a file is opened
-	private void createGridButtons(){
-		////////////////////////////////////////////////////////
-		// node buttons
-		////////////////////////////////////////////////////////
-		for(int r = 0; r < gridRows; r++)
-		{
-			for(int c = 0; c < gridCols; c++)
-			{
-				btnGrid[r][c].addActionListener(new NodeActionListener(r,c)
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						
-						
-						//System.out.println("Found the right space for new code\n");
-					     JTextField RedField = new JTextField(4);
-					     JTextField GreenField = new JTextField(4);
-					     JTextField BlueField = new JTextField(4);
-					     JPanel ColorPanel = new JPanel();
-					     ColorPanel.add(new JLabel("RED:"));
-					     ColorPanel.add(RedField);
-					     ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
-					     ColorPanel.add(new JLabel("GREEN:"));
-					     ColorPanel.add(GreenField);
-					     ColorPanel.add(Box.createHorizontalStrut(15));
-					     ColorPanel.add(new JLabel("BLUE:"));
-					     ColorPanel.add(BlueField);
-					     
-					     
-					     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
-					              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
-					     if (result == JOptionPane.OK_OPTION) 
-					     {
-					  //TODO error handler or default values for RGB - throws exception if left empty
-					    	String red_s = RedField.getText();
-					    	String green_s = GreenField.getText();
-					    	String blue_s = BlueField.getText();
-					    	int red_i = Integer.parseInt(red_s);
-						    int green_i = Integer.parseInt(green_s);
-							int blue_i = Integer.parseInt(blue_s);
-							//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
-							java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
-							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
-							//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
-							btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
-					     }
-					}
-				});
-			}
-		}
-	}
-	
 	////////////////////////////////////////////////////
 	// This method contains all of the code for creating
 	// events.
@@ -354,4 +262,87 @@ public class GridEditorGui extends JFrame {
 		createGridButtons();
 	
 	}
+	//This method will be used to initialize the grid
+	//Called at the start, and when a file is opened
+	private void initGrid(){
+		if(gridPanel!=null){
+			gridPanel.removeAll();
+			contentPane.remove(gridPanel);
+			contentPane.invalidate();
+		}
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		contentPane.add(gridPanel, BorderLayout.NORTH);
+		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
+		
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		contentPane.add(scrollPane, BorderLayout.SOUTH);
+		
+		previewPanel = new JPanel();
+		scrollPane.setViewportView(previewPanel);
+		
+		if (frames != null){
+			for(int f = 0; f < frames.size(); f++){
+				previewPanel.add(new JButton("Frame: " + f));
+			}
+		}
+		
+		btnGrid = new JButton[gridRows][gridCols];
+		for(int r = 0; r < gridRows; r++){
+			for(int c = 0; c < gridCols; c++){
+				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
+				btnGrid[r][c].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
+				gridPanel.add(btnGrid[r][c]);
+			}
+		}
+		contentPane.revalidate();
+		//TODO: repainting is probably not the best solution. Improve if/when possible
+		contentPane.repaint();
+	}
+	//This method creates the event handlers for the node buttons
+		//Called at start, and when a file is opened
+		private void createGridButtons(){
+			////////////////////////////////////////////////////////
+			// node buttons
+			////////////////////////////////////////////////////////
+			for(int r = 0; r < gridRows; r++){
+				for(int c = 0; c < gridCols; c++){
+					btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
+						public void actionPerformed(ActionEvent e){
+							
+							System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
+						    JTextField RedField = new JTextField(4);
+						    JTextField GreenField = new JTextField(4);
+						    JTextField BlueField = new JTextField(4);
+						    JPanel ColorPanel = new JPanel();
+						    ColorPanel.add(new JLabel("RED:"));
+						    ColorPanel.add(RedField);
+						    ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
+						    ColorPanel.add(new JLabel("GREEN:"));
+						    ColorPanel.add(GreenField);
+						    ColorPanel.add(Box.createHorizontalStrut(15));
+						    ColorPanel.add(new JLabel("BLUE:"));
+						    ColorPanel.add(BlueField);
+						     
+						     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
+						              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
+						     if (result == JOptionPane.OK_OPTION){
+						  //TODO error handler or default values for RGB - throws exception if left empty
+						    	String red_s = RedField.getText();
+						    	String green_s = GreenField.getText();
+						    	String blue_s = BlueField.getText();
+						    	int red_i = Integer.parseInt(red_s);
+							    int green_i = Integer.parseInt(green_s);
+								int blue_i = Integer.parseInt(blue_s);
+								//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
+								java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
+								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
+								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
+								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
+						     }
+						}
+					});
+				}
+			}
+		}
 }
