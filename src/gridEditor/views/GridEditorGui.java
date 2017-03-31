@@ -326,9 +326,9 @@ public class GridEditorGui extends JFrame {
 						    	String red_s = RedField.getText();
 						    	String green_s = GreenField.getText();
 						    	String blue_s = BlueField.getText();
-						    	int red_i = Integer.parseInt(red_s);
-							    int green_i = Integer.parseInt(green_s);
-								int blue_i = Integer.parseInt(blue_s);
+						    	int red_i = red_s.isEmpty() ? 0 : Integer.parseInt(red_s);
+							    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
+								int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
 								//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
 								java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
 								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
