@@ -1,24 +1,15 @@
 package gridEditor.views;
 
-import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JRadioButton;
-import javax.swing.JButton;
+
 import java.awt.Toolkit;
-import javax.swing.UIManager;
-import javax.swing.JComboBox;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JCheckBoxMenuItem;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
-import javax.swing.JFileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,12 +20,12 @@ import files.ReadFile;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.BoxLayout;
+
 import java.awt.Component;
 import javax.swing.*;
 
@@ -49,7 +40,7 @@ public class GridEditorGui extends JFrame {
 	private int gridCols = 10;
 	private int gridCellWidth = 75;
 	private int gridCellHeight = 25;
-	private JButton[][] btnGrid;
+	private JLabel[][] btnGrid;
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmNew;
 	private JMenuItem mntmSave;
@@ -287,11 +278,13 @@ public class GridEditorGui extends JFrame {
 			}
 		}
 		
-		btnGrid = new JButton[gridRows][gridCols];
+		btnGrid = new JLabel[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
 			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c] = new JButton("R:" + r + " " + "C:" + c);
+				btnGrid[r][c] = new JLabel("R:" + r + " " + "C:" + c);
 				btnGrid[r][c].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
+				btnGrid[r][c].setHorizontalAlignment(SwingConstants.CENTER);
+				btnGrid[r][c].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 				gridPanel.add(btnGrid[r][c]);
 			}
 		}
@@ -302,15 +295,17 @@ public class GridEditorGui extends JFrame {
 	//This method creates the event handlers for the node buttons
 		//Called at start, and when a file is opened
 		private void createGridButtons(){
+			
 			////////////////////////////////////////////////////////
 			// node buttons
 			////////////////////////////////////////////////////////
 			for(int r = 0; r < gridRows; r++){
 				for(int c = 0; c < gridCols; c++){
-					btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
-						public void actionPerformed(ActionEvent e){
-							
-							System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
+					btnGrid[r][c].addMouseListener(new NodeActionListener(r, c){
+
+						@Override
+						public void mouseClicked(MouseEvent arg0) {
+							//System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
 						    JTextField RedField = new JTextField(4);
 						    JTextField GreenField = new JTextField(4);
 						    JTextField BlueField = new JTextField(4);
@@ -331,17 +326,31 @@ public class GridEditorGui extends JFrame {
 						    	String red_s = RedField.getText();
 						    	String green_s = GreenField.getText();
 						    	String blue_s = BlueField.getText();
-						    	int red_i = Integer.parseInt(red_s);
-							    int green_i = Integer.parseInt(green_s);
-								int blue_i = Integer.parseInt(blue_s);
+						    	int red_i = red_s.isEmpty() ? 0 : Integer.parseInt(red_s);
+							    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
+								int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
 								//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
 								java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
 								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
 						     }
+							
+						}
+						@Override
+						public void mousePressed(MouseEvent e) {
+							btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+							
+						}
+
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+							
 						}
 					});
+					
+				
 				}
 			}
 		}

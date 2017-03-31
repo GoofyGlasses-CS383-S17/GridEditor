@@ -1,9 +1,10 @@
 package gridEditor.common;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class NodeActionListener implements ActionListener{
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class NodeActionListener implements MouseListener{
 	private int row;
 	private int col;
 	
@@ -12,11 +13,6 @@ public class NodeActionListener implements ActionListener{
 		setCol(c);
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	private void setRow(int r){
 		row = r;
 	}
@@ -28,6 +24,36 @@ public class NodeActionListener implements ActionListener{
 	}
 	public int getCol(){
 		return col;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 
