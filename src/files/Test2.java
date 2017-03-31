@@ -3,8 +3,8 @@ package files;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
+import java.awt.Color;
 
-import gridEditor.common.Color;
 import gridEditor.common.Frame;
 import gridEditor.common.Node;
 
@@ -34,10 +34,7 @@ public class Test2 {
 			{	
 				color_matrix[i][j] = new Node();
 				Random rand = new Random();
-				Color tempColor = new Color();
-				tempColor.setRed(rand.nextInt(255));
-				tempColor.setGreen(rand.nextInt(255));
-				tempColor.setBlue(rand.nextInt(255));
+				Color tempColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
 				
 				color_matrix[i][j].setColor(tempColor);
 			}

@@ -5,8 +5,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.Color;
 
-import gridEditor.common.Color;
 import gridEditor.common.Frame;
 import gridEditor.common.Node;
 

@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.awt.Color;
 
-import gridEditor.common.Color;
 import gridEditor.common.Frame;
 import gridEditor.common.Node;
 
@@ -51,11 +51,7 @@ public class ReadFile {
 					// adding nodes by row
 					for(int k=0; k<columns; k++) {
 						//retrieve color value
-						tempColor = new Color();
-						tempColor.setRed(Integer.parseInt(tempArray[k*3]));
-						tempColor.setGreen(Integer.parseInt(tempArray[(k*3)+1]));
-						tempColor.setBlue(Integer.parseInt(tempArray[(k*3)+2]));
-						
+						tempColor = new Color(Integer.parseInt(tempArray[k*3]), Integer.parseInt(tempArray[(k*3)+1]), Integer.parseInt(tempArray[(k*3)+2]));
 						//assign color to associated node
 						tempNode = new Node();
 						tempNode.setColor(tempColor);

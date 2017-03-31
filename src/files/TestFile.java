@@ -1,8 +1,8 @@
 package files;
 
 import java.util.ArrayList;
+import java.awt.Color;
 
-import gridEditor.common.Color;
 import gridEditor.common.Frame;
 import gridEditor.common.Node;
 
@@ -13,14 +13,10 @@ public class TestFile {
 		ArrayList<Frame> testList = new ArrayList<>();
 		Frame test;
 		
-		Color tempColor = new Color();
-		Color tempColor2 = new Color();
-		Color tempColor3 = new Color();
-		Color tempColor4 = new Color();
-		tempColor.setColor(0, 0, 255);
-		tempColor2.setColor(255, 0, 0);
-		tempColor3.setColor(0, 255, 0);
-		tempColor4.setColor(255, 255, 255);
+		Color tempColor = new Color(0, 0, 255);
+		Color tempColor2 = new Color(255, 0, 0);
+		Color tempColor3 = new Color(0, 255, 0);
+		Color tempColor4 = new Color(255, 255, 255);
 		
 		Node tempNode = new Node();
 		Node tempNode2 = new Node();

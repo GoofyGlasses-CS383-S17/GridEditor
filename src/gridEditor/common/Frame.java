@@ -3,6 +3,8 @@
 
 package gridEditor.common;
 
+import java.awt.Color;
+
 public class Frame {
 	//these variables should only be accessed via methods
 	private Node[][] nodes;

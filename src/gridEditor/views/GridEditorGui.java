@@ -334,6 +334,7 @@ public class GridEditorGui extends JFrame {
 								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
+								//frames.get(0).setNodeColor(this.getRow(), this.getCol(), temp_color);
 						     }
 							
 						}
