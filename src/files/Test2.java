@@ -18,19 +18,19 @@ public class Test2 {
 		
 		
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter x dimension: ");
-		int x = scanner.nextInt();
-		System.out.print("Please enter y dimension: ");
-		int y = scanner.nextInt();
+		System.out.print("Please enter number of rows: ");
+		int rows = scanner.nextInt();
+		System.out.print("Please enter number of columns: ");
+		int cols = scanner.nextInt();
 		
-		System.out.print("The (x,y) pair entered is: (" + x + "," + y + ")");
+		System.out.print("The (rows, columns) pair entered is: (" + rows + "," + cols + ")");
 		
 		
-		Node[][] color_matrix = new Node[x][y];
+		Node[][] color_matrix = new Node[rows][cols];
 		
-		for(int i = 0; i < x; i++)
+		for(int i = 0; i < rows; i++)
 		{	
-			for(int j = 0; j < y; j++)
+			for(int j = 0; j < cols; j++)
 			{	
 				color_matrix[i][j] = new Node();
 				Random rand = new Random();
@@ -91,7 +91,7 @@ public class Test2 {
 			}
 		}
 		*/
-		for(int z = 0; z < x*y; z++)
+		for(int z = 0; z < rows*cols; z++)
 		{
 			test = new Frame();
 			test.setDuration(z);
