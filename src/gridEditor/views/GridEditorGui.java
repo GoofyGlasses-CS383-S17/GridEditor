@@ -7,11 +7,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,14 +17,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import files.ReadFile;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
 
-import java.awt.Component;
 import javax.swing.*;
 
 
@@ -157,7 +152,7 @@ public class GridEditorGui extends JFrame {
 		
 		if(frames==null){
 			frames=new ArrayList<Frame>();
-			frames.add(new Frame(gridCols, gridRows));
+			frames.add(new Frame(gridRows, gridCols));
 		}
 	}
 		
@@ -334,7 +329,7 @@ public class GridEditorGui extends JFrame {
 								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
-								//frames.get(0).setNodeColor(this.getRow(), this.getCol(), temp_color);
+								frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
 						     }
 							
 						}
