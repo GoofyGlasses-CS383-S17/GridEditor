@@ -1,5 +1,6 @@
 package gridEditor.views;
 
+import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -35,6 +36,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
 import java.awt.Component;
+import javax.swing.*;
+
+
 
 public class GridEditorGui extends JFrame {
 
@@ -214,11 +218,49 @@ public class GridEditorGui extends JFrame {
 		////////////////////////////////////////////////////////
 		// node buttons
 		////////////////////////////////////////////////////////
-		for(int r = 0; r < gridRows; r++){
-			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c].addActionListener(new NodeActionListener(r,c){
-					public void actionPerformed(ActionEvent e){
-						System.out.println("Button Row = " + this.getRow()  + " Column =  " + this.getCol());
+		for(int r = 0; r < gridRows; r++)
+		{
+			for(int c = 0; c < gridCols; c++)
+			{
+				int x = r;
+				int y = c;
+				btnGrid[r][c].addActionListener(new NodeActionListener(r,c)
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						
+						
+						//System.out.println("Found the right space for new code\n");
+					     JTextField RedField = new JTextField(4);
+					     JTextField GreenField = new JTextField(4);
+					     JTextField BlueField = new JTextField(4);
+					     JPanel ColorPanel = new JPanel();
+					     ColorPanel.add(new JLabel("RED:"));
+					     ColorPanel.add(RedField);
+					     ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
+					     ColorPanel.add(new JLabel("GREEN:"));
+					     ColorPanel.add(GreenField);
+					     ColorPanel.add(Box.createHorizontalStrut(15));
+					     ColorPanel.add(new JLabel("BLUE:"));
+					     ColorPanel.add(BlueField);
+					     
+					     
+					     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
+					              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
+					     if (result == JOptionPane.OK_OPTION) 
+					     {
+					    	String red_s = RedField.getText();
+					    	String green_s = GreenField.getText();
+					    	String blue_s = BlueField.getText();
+					    	int red_i = Integer.parseInt(red_s);
+						    int green_i = Integer.parseInt(green_s);
+							int blue_i = Integer.parseInt(blue_s);
+							//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
+							java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
+							btnGrid[x][y].setOpaque(true);
+							//btnGrid[x][y].setContentAreaFilled(false);
+							btnGrid[x][y].setBackground(temp_color);
+					     }
 					}
 				});
 			}
