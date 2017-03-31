@@ -92,11 +92,7 @@ public class GridEditorGui extends JFrame {
 	 */
 	public GridEditorGui() {
 		
-		
 		initComponents();
-		
-		
-		
 		createEvents();
 		
 	}
@@ -222,8 +218,6 @@ public class GridEditorGui extends JFrame {
 		{
 			for(int c = 0; c < gridCols; c++)
 			{
-				int x = r;
-				int y = c;
 				btnGrid[r][c].addActionListener(new NodeActionListener(r,c)
 				{
 					public void actionPerformed(ActionEvent e)
@@ -249,6 +243,7 @@ public class GridEditorGui extends JFrame {
 					              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
 					     if (result == JOptionPane.OK_OPTION) 
 					     {
+					  //TODO error handler or default values for RGB - throws exception if left empty
 					    	String red_s = RedField.getText();
 					    	String green_s = GreenField.getText();
 					    	String blue_s = BlueField.getText();
@@ -257,9 +252,9 @@ public class GridEditorGui extends JFrame {
 							int blue_i = Integer.parseInt(blue_s);
 							//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
 							java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
-							btnGrid[x][y].setOpaque(true);
-							//btnGrid[x][y].setContentAreaFilled(false);
-							btnGrid[x][y].setBackground(temp_color);
+							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
+							//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
+							btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
 					     }
 					}
 				});
