@@ -3,6 +3,8 @@
 
 package gridEditor.common;
 
+import java.awt.Color;
+
 public class Node {
 	protected Color color;
 	public Node(){
