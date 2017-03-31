@@ -12,10 +12,10 @@ public class Frame {
 	public Frame(){
 		
 	}
-	public Frame(int width, int height){
-		nodes=new Node[width][height];
-		for(int x=0;x<width;x++){
-			for(int y=0;y<height;y++){
+	public Frame(int rows, int cols){
+		nodes=new Node[rows][cols];
+		for(int x=0;x<rows;x++){
+			for(int y=0;y<cols;y++){
 				nodes[x][y]=new Node();
 			}
 		}
@@ -54,11 +54,11 @@ public class Frame {
 	public void setDuration(int newVal){
 		duration=newVal;
 	}
-	public Color getNodeColor(int x, int y){
-		return nodes[x][y].getColor();
+	public Color getNodeColor(int row, int col){
+		return nodes[row][col].getColor();
 	}
-	public void setNodeColor(int x, int y, Color color){
-		nodes[x][y].setColor(color);
+	public void setNodeColor(int row, int col, Color color){
+		nodes[row][col].setColor(color);
 	}
 	public void setNodeGrid(Node[][] nodes){
 		this.nodes=nodes;
