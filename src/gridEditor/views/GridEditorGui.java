@@ -184,7 +184,7 @@ public class GridEditorGui extends JFrame {
 					try{
 						File tangFile = openFileChooser.getSelectedFile();
 						currentFile=tangFile.getAbsolutePath();
-						System.out.println("Selected File: " + currentFile);
+						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
 						ArrayList<Frame> temp=new ArrayList<Frame>();
@@ -306,6 +306,7 @@ public class GridEditorGui extends JFrame {
 						    JTextField GreenField = new JTextField(4);
 						    JTextField BlueField = new JTextField(4);
 						    Color current=frames.get(currentFrame).getNodeColor(this.getRow(), this.getCol());
+						    //populate fields with current values
 						    if(current!=null){
 						    	RedField.setText(Integer.toString(current.getRed()));
 						    	GreenField.setText(Integer.toString(current.getGreen()));
@@ -324,7 +325,6 @@ public class GridEditorGui extends JFrame {
 						     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
 						              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
 						     if (result == JOptionPane.OK_OPTION){
-						  //TODO error handler or default values for RGB - throws exception if left empty
 						    	String red_s = RedField.getText();
 						    	String green_s = GreenField.getText();
 						    	String blue_s = BlueField.getText();
