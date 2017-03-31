@@ -1,6 +1,7 @@
 package gridEditor.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.border.BevelBorder;
@@ -304,6 +305,12 @@ public class GridEditorGui extends JFrame {
 						    JTextField RedField = new JTextField(4);
 						    JTextField GreenField = new JTextField(4);
 						    JTextField BlueField = new JTextField(4);
+						    Color current=frames.get(currentFrame).getNodeColor(this.getRow(), this.getCol());
+						    if(current!=null){
+						    	RedField.setText(Integer.toString(current.getRed()));
+						    	GreenField.setText(Integer.toString(current.getGreen()));
+						    	BlueField.setText(Integer.toString(current.getBlue()));
+						    }
 						    JPanel ColorPanel = new JPanel();
 						    ColorPanel.add(new JLabel("RED:"));
 						    ColorPanel.add(RedField);
@@ -325,7 +332,7 @@ public class GridEditorGui extends JFrame {
 							    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
 								int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
 								//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
-								java.awt.Color temp_color = new java.awt.Color(red_i,green_i,blue_i);
+								java.awt.Color temp_color = new Color(red_i,green_i,blue_i);
 								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
