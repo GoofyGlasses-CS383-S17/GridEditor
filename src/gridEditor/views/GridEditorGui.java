@@ -109,6 +109,8 @@ public class GridEditorGui extends JFrame {
 		setBounds(100, 100, 800, 600);
 		
 		contentPane = new JPanel();
+		gridPanel = new JPanel();
+		scrollPane = new JScrollPane();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
@@ -176,11 +178,11 @@ public class GridEditorGui extends JFrame {
 			contentPane.invalidate();
 		}
 		contentPane.setLayout(new BorderLayout(0, 0));
-		gridPanel = new JPanel();
+		
 		contentPane.add(gridPanel, BorderLayout.NORTH);
 		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
 		
-		scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		contentPane.add(scrollPane, BorderLayout.SOUTH);
 		
 		previewPanel = new JPanel();
