@@ -197,7 +197,7 @@ public class GridEditorGui extends JFrame {
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
 						initGrid();
-						createGridButtons();
+						createNodeButtonEventHandlers();
 						
 					}
 					catch(Exception e){
@@ -246,7 +246,7 @@ public class GridEditorGui extends JFrame {
 		});
 		
 		//node buttons
-		createGridButtons();
+		createNodeButtonEventHandlers();
 	
 	}
 	//This method will be used to initialize the grid
@@ -287,7 +287,7 @@ public class GridEditorGui extends JFrame {
 	}
 	//This method creates the event handlers for the node buttons
 		//Called at start, and when a file is opened
-		private void createGridButtons(){
+		private void createNodeButtonEventHandlers(){
 			
 			////////////////////////////////////////////////////////
 			// node buttons
