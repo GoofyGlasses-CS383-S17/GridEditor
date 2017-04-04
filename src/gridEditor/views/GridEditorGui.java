@@ -277,10 +277,7 @@ public class GridEditorGui extends JFrame {
 		btnGrid = new JLabel[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
 			for(int c = 0; c < gridCols; c++){
-				btnGrid[r][c] = new JLabel("R:" + r + " " + "C:" + c);
-				btnGrid[r][c].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
-				btnGrid[r][c].setHorizontalAlignment(SwingConstants.CENTER);
-				btnGrid[r][c].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+				createNodeButton(r, c);
 				gridPanel.add(btnGrid[r][c]);
 			}
 		}
@@ -355,6 +352,19 @@ public class GridEditorGui extends JFrame {
 					
 				
 				}
+			}
+		}
+		
+		private void createNodeButton(int row, int column){
+			btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
+			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
+			btnGrid[row][column].setHorizontalAlignment(SwingConstants.CENTER);
+			btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			
+			if(frames != null){
+				Color nodeColor = frames.get(currentFrame).getNodeColor(row, column);
+				btnGrid[row][column].setOpaque(true);
+				btnGrid[row][column].setBackground(nodeColor);
 			}
 		}
 }
