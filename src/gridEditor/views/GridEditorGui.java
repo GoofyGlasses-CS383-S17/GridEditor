@@ -364,6 +364,8 @@ public class GridEditorGui extends JFrame {
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
 								frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
+								// redraw the grid
+								initGrid();
 						     }
 							
 						}

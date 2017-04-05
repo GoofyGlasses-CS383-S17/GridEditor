@@ -72,10 +72,10 @@ public class Frame {
 	}
 	public ImageIcon getFrameIcon(){
 		Node[][] grid = this.getNodeGrid();
-		BufferedImage frameImage = new BufferedImage(grid.length,grid[0].length,BufferedImage.TYPE_INT_RGB);
-		for (int r = 0; r < grid.length; r++){
-			for (int c = 0; c < grid[0].length; c++){
-				frameImage.setRGB(r, c, grid[r][c].getColor().getRGB());			
+		BufferedImage frameImage = new BufferedImage(grid[0].length,grid.length,BufferedImage.TYPE_INT_RGB);
+		for (int c = 0; c < grid[0].length; c++){
+			for (int r = 0; r < grid.length; r++){
+				frameImage.setRGB(c, r, grid[r][c].getColor().getRGB());			
 			}
 		}
 		Image scaledImage = frameImage.getScaledInstance(grid.length * 10, grid[0].length * 10, Image.SCALE_FAST);
