@@ -365,7 +365,7 @@ public class GridEditorGui extends JFrame {
 						}
 					}
 					// add node to the Frame
-					tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
+					//tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
 					tempFrame.setNodeGrid(tempNodeArr);						// is required
 				
 					// Add this copied frame to our list of frames
