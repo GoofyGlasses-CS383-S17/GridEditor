@@ -273,6 +273,7 @@ public class GridEditorGui extends JFrame {
 				previewPanel.add(new JButton("Frame: " + f));
 			}
 		}
+		createFrameButtonEventHandlers();
 		
 		btnGrid = new JLabel[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
@@ -285,6 +286,24 @@ public class GridEditorGui extends JFrame {
 		//TODO: repainting is probably not the best solution. Improve if/when possible
 		contentPane.repaint();
 	}
+	
+	// This method creates the event handlers for the frame buttons
+	private void createFrameButtonEventHandlers(){
+		for(int i=0; i < previewPanel.getComponentCount(); i++){
+			previewPanel.getComponent(i).addMouseListener(new FrameButtonActionListener(i){
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					int newFrameNumber = this.getFrameNumber();
+					if(newFrameNumber < frames.size()){
+						currentFrame = newFrameNumber;
+						initGrid();
+						createNodeButtonEventHandlers();
+					}
+				}
+			});
+		}
+	}
+	
 	//This method creates the event handlers for the node buttons
 		//Called at start, and when a file is opened
 		private void createNodeButtonEventHandlers(){
@@ -355,6 +374,7 @@ public class GridEditorGui extends JFrame {
 			}
 		}
 		
+		// Given row/column values, this method creates a button and sets its color
 		private void createNodeButton(int row, int column){
 			btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
 			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
