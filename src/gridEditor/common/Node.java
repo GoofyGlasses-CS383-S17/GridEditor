@@ -8,8 +8,10 @@ import java.awt.Color;
 public class Node {
 	protected Color color;
 	public Node(){
-		this(255, 255, 255);					// Set to 255, so when creating a new frame, the rest of Nodes are white,
-	}											// and not Black (if user doesn't edit all nodes themselves)
+		this.setColor(Color.WHITE);
+    // Set to 255, so when creating a new frame, the rest of Nodes are white,
+		// and not Black (if user doesn't edit all nodes themselves)
+  }
 	public Node(int red, int green, int blue){
 		color=new Color(red, green, blue);
 	}

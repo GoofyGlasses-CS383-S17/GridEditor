@@ -206,7 +206,7 @@ public class GridEditorGui extends JFrame {
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
 						ArrayList<Frame> temp=new ArrayList<Frame>();
-						ReadFile.readFile(currentFile, temp);
+						temp = TangFile.readFile(tangFile);
 						if(temp.size()==0){
 							return;
 						}
@@ -242,7 +242,8 @@ public class GridEditorGui extends JFrame {
 		// Save as file handler
 		mntmSaveAs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		// TODO add code for the Save as function	
+		// TODO add code for the Save as function
+				
 			}
 		});
 		
@@ -293,7 +294,10 @@ public class GridEditorGui extends JFrame {
 		
 		if (frames != null){
 			for(int f = 0; f < frames.size(); f++){
-				previewPanel.add(new JButton("Frame: " + f));
+				JButton tempBtn = new JButton();
+				previewPanel.add(tempBtn);
+				tempBtn.setIcon(frames.get(f).getFrameIcon());
+				
 			}
 		}
 		
@@ -427,6 +431,8 @@ public class GridEditorGui extends JFrame {
 								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
 								frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
+								// redraw the grid
+								initGrid();
 						     }
 							
 						}
