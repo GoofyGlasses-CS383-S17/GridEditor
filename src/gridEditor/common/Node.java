@@ -9,7 +9,9 @@ public class Node {
 	protected Color color;
 	public Node(){
 		this.setColor(Color.WHITE);
-	}
+    // Set to 255, so when creating a new frame, the rest of Nodes are white,
+		// and not Black (if user doesn't edit all nodes themselves)
+  }
 	public Node(int red, int green, int blue){
 		color=new Color(red, green, blue);
 	}

@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 public class Frame {
 	//these variables should only be accessed via methods
 	private Node[][] nodes;
-	private int frameNum, startingTime, duration;
+	private int startingTime, duration;
 	public Frame(){
 		
 	}
@@ -27,18 +27,11 @@ public class Frame {
 	//copy constructor
 	public Frame(Frame old){
 		nodes=old.getNodeGrid();
-		frameNum=old.getFrameNum()+1;
 		duration=old.getDuration();
 		startingTime=old.getStartingTime()+duration;
 	}
 	public Frame(Node[][] nodes){
 		this.nodes=nodes;
-	}
-	public int getFrameNum(){
-		return frameNum;
-	}
-	public void setFrameNum(int newVal){
-		frameNum=newVal;
 	}
 	public int getWidth(){
 		return nodes[0].length;

@@ -60,7 +60,6 @@ public class TangFile {
 					}
 				}
 				// add node to the Frame
-				tempFrame.setFrameNum(i);
 				tempFrame.setNodeGrid(tempNodeArr);
 				//add each Frame to the ArrayList<Frame> that was passed in
 				grid.add(tempFrame);
