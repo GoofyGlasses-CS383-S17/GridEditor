@@ -294,7 +294,7 @@ public class GridEditorGui extends JFrame {
 		
 		if (frames != null){
 			for(int f = 0; f < frames.size(); f++){
-				JButton tempBtn = new JButton();
+				JButton tempBtn = new JButton("Frame: " + f);
 				previewPanel.add(tempBtn);
 				tempBtn.setIcon(frames.get(f).getFrameIcon());
 				
