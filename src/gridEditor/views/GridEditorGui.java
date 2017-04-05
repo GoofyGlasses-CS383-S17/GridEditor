@@ -51,6 +51,8 @@ public class GridEditorGui extends JFrame {
 //	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
 	private JPanel previewPanel;
+	private JPanel addframePanel;
+	private JPanel frameEditPanel;
 	private JScrollPane scrollPane;
 
 	/**
@@ -93,13 +95,16 @@ public class GridEditorGui extends JFrame {
 		setTitle("GoofyGlasses Editor");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		
+		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
+		setBounds(100, 100, 800, 650);
 		
 		contentPane = new JPanel();
 		gridPanel = new JPanel();
 		scrollPane = new JScrollPane();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		frameEditPanel = new JPanel();
 		
 		openFileChooser = new JFileChooser();
 		
@@ -154,6 +159,19 @@ public class GridEditorGui extends JFrame {
 		if(frames==null){
 			frames=new ArrayList<Frame>();
 			frames.add(new Frame(gridRows, gridCols));
+			
+		// Add Frame Edit Panel
+		contentPane.add(frameEditPanel, BorderLayout.CENTER);
+		
+		// Add a "+" Button to add a frame (Added here as button should never move or change)
+		addframePanel = new JPanel();
+		frameEditPanel.add(addframePanel);
+		addframePanel.add(new JButton("Add Frame (+)"));
+		
+		createAddFrameEventHandler();
+		//TODO: add the "-" button to remove frames as well
+		
+		
 		}
 	}
 		
@@ -194,6 +212,8 @@ public class GridEditorGui extends JFrame {
 						}
 						//Re-initialize grid based off of values from file
 						frames=temp;
+						System.out.println(temp.get(0).getNodeColor(1, 1));
+						
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
 						initGrid();
@@ -265,6 +285,9 @@ public class GridEditorGui extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		contentPane.add(scrollPane, BorderLayout.SOUTH);
 		
+		// Add Frame Edit Panel (Below Grid, but above scroll pane)
+		contentPane.add(frameEditPanel, BorderLayout.CENTER);
+		
 		previewPanel = new JPanel();
 		scrollPane.setViewportView(previewPanel);
 		
@@ -273,6 +296,7 @@ public class GridEditorGui extends JFrame {
 				previewPanel.add(new JButton("Frame: " + f));
 			}
 		}
+		
 		createFrameButtonEventHandlers();
 		
 		btnGrid = new JLabel[gridRows][gridCols];
@@ -289,6 +313,7 @@ public class GridEditorGui extends JFrame {
 				}
 			}
 		}
+		
 		contentPane.revalidate();
 		//TODO: repainting is probably not the best solution. Improve if/when possible
 		contentPane.repaint();
@@ -300,12 +325,54 @@ public class GridEditorGui extends JFrame {
 			previewPanel.getComponent(i).addMouseListener(new FrameButtonActionListener(i){
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
+					
 					int newFrameNumber = this.getFrameNumber();
 					if(newFrameNumber < frames.size()){
 						currentFrame = newFrameNumber;
 						initGrid();
-						createNodeButtonEventHandlers();
+						createNodeButtonEventHandlers();	
 					}
+					
+					//previewPanel[newFrameNumber].setBackground(black);
+				}
+			});
+		}
+	}
+	
+	// This method creates event handlers for the add frame button
+	private void createAddFrameEventHandler(){
+		for(int l=0; l < addframePanel.getComponentCount(); l++){
+			addframePanel.getComponent(l).addMouseListener(new FrameButtonActionListener(l){
+				@Override
+				public void mouseClicked(MouseEvent arg1) {
+					
+					// Acts very similar to the ReadFile.java class, need to get copy of current frame
+					// and put it in the frames array list (add a new frame to out current list of frames)
+					Frame tempFrame = new Frame();
+					tempFrame.setStartingTime(frames.size() + 1);			// Not sure what value goes here yet (later functionality?)
+					Node[][] tempNodeArr = new Node[gridRows][gridCols];
+						
+					for(int j=0; j<gridRows; j++)
+					{
+						for(int k=0; k<gridCols; k++) 
+						{
+							//get color value
+							Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
+							//assign color to current node
+							Node tempNode = new Node();
+							tempNode.setColor(tempColor);
+							tempNodeArr[j][k] = tempNode;
+						}
+					}
+					// add node to the Frame
+					tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
+					tempFrame.setNodeGrid(tempNodeArr);						// is required
+				
+					// Add this copied frame to our list of frames
+					frames.add(tempFrame);
+					
+					initGrid();
+					createNodeButtonEventHandlers();
 				}
 			});
 		}
