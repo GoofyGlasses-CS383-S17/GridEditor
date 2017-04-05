@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import files.ReadFile;
-
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
@@ -46,7 +44,7 @@ public class GridEditorGui extends JFrame {
 	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
 	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
 	private JMenuItem mntmAbout;
-	private String currentFile;//stores currently opened file for saving purposes
+//	private String currentFile;//stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
 //	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
@@ -201,7 +199,7 @@ public class GridEditorGui extends JFrame {
 				if (returnValue == JFileChooser.APPROVE_OPTION){
 					try{
 						File tangFile = openFileChooser.getSelectedFile();
-						currentFile=tangFile.getAbsolutePath();
+						//currentFile=tangFile.getAbsolutePath();
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
@@ -212,7 +210,7 @@ public class GridEditorGui extends JFrame {
 						}
 						//Re-initialize grid based off of values from file
 						frames=temp;
-						System.out.println(temp.get(0).getNodeColor(1, 1));
+						//System.out.println(temp.get(0).getNodeColor(1, 1));
 						
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
