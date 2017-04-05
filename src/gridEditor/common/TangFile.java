@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class TangFile {
 
-	public ArrayList<Frame> readFile(File filename) {
+	public static ArrayList<Frame> readFile(File filename) {
 		String line;
 		String[] tempArray;
 		Frame tempFrame;

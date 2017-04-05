@@ -8,7 +8,7 @@ import java.awt.Color;
 public class Node {
 	protected Color color;
 	public Node(){
-		this(0, 0, 0);
+		this.setColor(Color.WHITE);
 	}
 	public Node(int red, int green, int blue){
 		color=new Color(red, green, blue);

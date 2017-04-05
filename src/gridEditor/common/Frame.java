@@ -4,6 +4,10 @@
 package gridEditor.common;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
 
 public class Frame {
 	//these variables should only be accessed via methods
@@ -65,5 +69,16 @@ public class Frame {
 	}
 	public Node[][] getNodeGrid(){
 		return nodes;
+	}
+	public ImageIcon getFrameIcon(){
+		Node[][] grid = this.getNodeGrid();
+		BufferedImage frameImage = new BufferedImage(grid.length,grid[0].length,BufferedImage.TYPE_INT_RGB);
+		for (int r = 0; r < grid.length; r++){
+			for (int c = 0; c < grid[0].length; c++){
+				frameImage.setRGB(r, c, grid[r][c].getColor().getRGB());			
+			}
+		}
+		Image scaledImage = frameImage.getScaledInstance(grid.length * 10, grid[0].length * 10, Image.SCALE_FAST);
+		return new ImageIcon(scaledImage);
 	}
 }
