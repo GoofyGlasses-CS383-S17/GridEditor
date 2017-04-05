@@ -282,6 +282,13 @@ public class GridEditorGui extends JFrame {
 				btnGrid[r][c].setHorizontalAlignment(SwingConstants.CENTER);
 				btnGrid[r][c].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 				gridPanel.add(btnGrid[r][c]);
+				if (frames != null){
+					Color current=frames.get(currentFrame).getNodeColor(r, c);
+					if (current != null){
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(current);
+					}
+				}
 			}
 		}
 		contentPane.revalidate();
