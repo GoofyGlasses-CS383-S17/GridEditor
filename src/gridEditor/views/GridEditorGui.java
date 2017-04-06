@@ -488,8 +488,8 @@ public class GridEditorGui extends JFrame {
 			btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			
 			/* Supposedly setPreferredSize is bad practice, and this seems to do nothing anyways
-			 * looking at another solution (SethF)
-			 * This is connected to the GridLayout issue @line ~300 (SethF)
+			 * looking at another solution (SethF) 
+			 * This is connected to the GridLayout issue @line ~295 (SethF)
 			 */ 
 //			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
 			
