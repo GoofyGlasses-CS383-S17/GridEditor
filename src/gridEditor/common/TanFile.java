@@ -101,7 +101,7 @@ public class TanFile {
 		
 
 		//line 1, 2, 3, 4 fillers for first sprint
-		writer.write("0.0 //version number\n");
+		writer.write("0.4 //version number\n");
 		writer.write("noAudioFile\n");
 		writer.write("0 0 255\n");
 		writer.write("0 0 0 0 0 0 0 0 0 0\n");

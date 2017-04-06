@@ -3,7 +3,6 @@ package files;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.awt.Color;
 
 import gridEditor.common.Frame;

@@ -32,7 +32,7 @@ public class GridEditorGui extends JFrame {
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
 	private int gridCols = 10;
-	private int gridCellWidth = 75;
+	private int gridCellWidth = 25;
 	private int gridCellHeight = 25;
 	private JLabel[][] btnGrid;
 	private JMenuItem mntmOpen;
@@ -44,7 +44,7 @@ public class GridEditorGui extends JFrame {
 	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
 	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
 	private JMenuItem mntmAbout;
-//	private String currentFile;//stores currently opened file for saving purposes
+//	private String currentFile; //stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
 //	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
@@ -63,6 +63,7 @@ public class GridEditorGui extends JFrame {
 			e.printStackTrace();
 		}
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					GridEditorGui frame = new GridEditorGui();
@@ -95,7 +96,7 @@ public class GridEditorGui extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
-		setBounds(100, 100, 800, 650);
+		setBounds(100, 100, 1000, 800);
 		
 		contentPane = new JPanel();
 		gridPanel = new JPanel();
@@ -186,6 +187,7 @@ public class GridEditorGui extends JFrame {
 		
 		// New File handler
 		mntmNew.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 		//TODO Code to create new TAN file
 			}
@@ -193,6 +195,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Open File handler
 		mntmOpen.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int returnValue = openFileChooser.showOpenDialog(mntmOpen);
 				
@@ -232,6 +235,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Save File handler
 		mntmSave.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 		//TODO add code for saving tan file		
 			}
@@ -239,6 +243,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Save as file handler
 		mntmSaveAs.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 		// TODO add code for the Save as function
 				
@@ -247,6 +252,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Exit handler
 		mntmExit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 		// TODO Check if current file is "saved" before exit		
 				System.exit(0);
@@ -259,6 +265,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Grid Size Event Handler
 		mntmGridSize.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 		// TODO code to adjust grid size		
 			}
@@ -268,8 +275,11 @@ public class GridEditorGui extends JFrame {
 		createNodeButtonEventHandlers();
 	
 	}
-	//This method will be used to initialize the grid
-	//Called at the start, and when a file is opened
+	
+	/////////////////////////////////////////////////////
+	// This method will be used to initialize the grid
+	// Called at the start, and when a file is opened
+	/////////////////////////////////////////////////////
 	private void initGrid(){
 		if(gridPanel!=null){
 			gridPanel.removeAll();
@@ -279,7 +289,15 @@ public class GridEditorGui extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		contentPane.add(gridPanel, BorderLayout.NORTH);
-		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 0, 0));
+		
+		
+		/* GridLayout seems to be responsible for the pane-width buttons
+		 * According to SO this can be fixed by nesting the GridLayout inside
+		 * of a flowLayout. I will work more on this later (SethF)
+		 * 
+		 * http://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html#border
+		 */ 
+		gridPanel.setLayout(new GridLayout(gridRows, gridCols, 1, 1)); // ... , 1, 1) adds buffer space to cells
 		
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		contentPane.add(scrollPane, BorderLayout.SOUTH);
@@ -320,8 +338,11 @@ public class GridEditorGui extends JFrame {
 		//TODO: repainting is probably not the best solution. Improve if/when possible
 		contentPane.repaint();
 	}
-	
-	// This method creates the event handlers for the frame buttons
+
+	/////////////////////////////////////////////////////
+	// This method creates the event handlers for the 
+	// frame buttons
+	/////////////////////////////////////////////////////
 	private void createFrameButtonEventHandlers(){
 		for(int i=0; i < previewPanel.getComponentCount(); i++){
 			previewPanel.getComponent(i).addMouseListener(new FrameButtonActionListener(i){
@@ -340,8 +361,11 @@ public class GridEditorGui extends JFrame {
 			});
 		}
 	}
-	
-	// This method creates event handlers for the add frame button
+
+	/////////////////////////////////////////////////////
+	// This method creates event handlers for the add 
+	// frame button
+	/////////////////////////////////////////////////////
 	private void createAddFrameEventHandler(){
 		for(int l=0; l < addframePanel.getComponentCount(); l++){
 			addframePanel.getComponent(l).addMouseListener(new FrameButtonActionListener(l){
@@ -379,85 +403,95 @@ public class GridEditorGui extends JFrame {
 			});
 		}
 	}
-	
-	//This method creates the event handlers for the node buttons
-		//Called at start, and when a file is opened
-		private void createNodeButtonEventHandlers(){
-			
-			////////////////////////////////////////////////////////
-			// node buttons
-			////////////////////////////////////////////////////////
-			for(int r = 0; r < gridRows; r++){
-				for(int c = 0; c < gridCols; c++){
-					btnGrid[r][c].addMouseListener(new NodeActionListener(r, c){
 
-						@Override
-						public void mouseClicked(MouseEvent arg0) {
-							//System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
-						    JTextField RedField = new JTextField(4);
-						    JTextField GreenField = new JTextField(4);
-						    JTextField BlueField = new JTextField(4);
-						    Color current=frames.get(currentFrame).getNodeColor(this.getRow(), this.getCol());
-						    //populate fields with current values
-						    if(current!=null){
-						    	RedField.setText(Integer.toString(current.getRed()));
-						    	GreenField.setText(Integer.toString(current.getGreen()));
-						    	BlueField.setText(Integer.toString(current.getBlue()));
-						    }
-						    JPanel ColorPanel = new JPanel();
-						    ColorPanel.add(new JLabel("RED:"));
-						    ColorPanel.add(RedField);
-						    ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
-						    ColorPanel.add(new JLabel("GREEN:"));
-						    ColorPanel.add(GreenField);
-						    ColorPanel.add(Box.createHorizontalStrut(15));
-						    ColorPanel.add(new JLabel("BLUE:"));
-						    ColorPanel.add(BlueField);
-						     
-						     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
-						              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
-						     if (result == JOptionPane.OK_OPTION){
-						    	String red_s = RedField.getText();
-						    	String green_s = GreenField.getText();
-						    	String blue_s = BlueField.getText();
-						    	int red_i = red_s.isEmpty() ? 0 : Integer.parseInt(red_s);
-							    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
-								int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
-								//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
-								java.awt.Color temp_color = new Color(red_i,green_i,blue_i);
-								btnGrid[this.getRow()][this.getCol()].setOpaque(true);
-								//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
-								btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
-								frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
-								// redraw the grid
-								initGrid();
-						     }
-							
-						}
-						@Override
-						public void mousePressed(MouseEvent e) {
-							btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-							
-						}
+	/////////////////////////////////////////////////////
+	// This method creates the event handlers for the node
+	// buttons called at start, and when a file is opened
+	/////////////////////////////////////////////////////
+	private void createNodeButtonEventHandlers(){
+		
+		////////////////////////////////////////////////////////
+		// node buttons
+		////////////////////////////////////////////////////////
+		for(int r = 0; r < gridRows; r++){
+			for(int c = 0; c < gridCols; c++){
+				btnGrid[r][c].addMouseListener(new NodeActionListener(r, c){
 
-						@Override
-						public void mouseReleased(MouseEvent e) {
-							btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-							
-						}
-					});
-					
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						//System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
+					    JTextField RedField = new JTextField(4);
+					    JTextField GreenField = new JTextField(4);
+					    JTextField BlueField = new JTextField(4);
+					    Color current=frames.get(currentFrame).getNodeColor(this.getRow(), this.getCol());
+					    //populate fields with current values
+					    if(current!=null){
+					    	RedField.setText(Integer.toString(current.getRed()));
+					    	GreenField.setText(Integer.toString(current.getGreen()));
+					    	BlueField.setText(Integer.toString(current.getBlue()));
+					    }
+					    JPanel ColorPanel = new JPanel();
+					    ColorPanel.add(new JLabel("RED:"));
+					    ColorPanel.add(RedField);
+					    ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
+					    ColorPanel.add(new JLabel("GREEN:"));
+					    ColorPanel.add(GreenField);
+					    ColorPanel.add(Box.createHorizontalStrut(15));
+					    ColorPanel.add(new JLabel("BLUE:"));
+					    ColorPanel.add(BlueField);
+					     
+					     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
+					              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
+					     if (result == JOptionPane.OK_OPTION){
+					    	String red_s = RedField.getText();
+					    	String green_s = GreenField.getText();
+					    	String blue_s = BlueField.getText();
+					    	int red_i = red_s.isEmpty() ? 0 : Integer.parseInt(red_s);
+						    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
+							int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
+							//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
+							java.awt.Color temp_color = new Color(red_i,green_i,blue_i);
+							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
+							//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
+							btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
+							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
+							// redraw the grid
+							initGrid();
+					     }
+						
+					}
+					@Override
+					public void mousePressed(MouseEvent e) {
+						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+						
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+						
+					}
+				});
 				
-				}
+			
 			}
 		}
-		
-		// Given row/column values, this method creates a button and sets its color
-		private void createNodeButton(int row, int column){
+	}
+
+	/////////////////////////////////////////////////////
+	// Given row/column values, this method creates a 
+	// button and sets its color
+	/////////////////////////////////////////////////////
+	private void createNodeButton(int row, int column){
 			btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
-			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
 			btnGrid[row][column].setHorizontalAlignment(SwingConstants.CENTER);
 			btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			
+			/* Supposedly setPreferredSize is bad practice, and this seems to do nothing anyways
+			 * looking at another solution (SethF)
+			 * This is connected to the GridLayout issue @line ~300 (SethF)
+			 */ 
+//			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
 			
 			if(frames != null){
 				Color nodeColor = frames.get(currentFrame).getNodeColor(row, column);
