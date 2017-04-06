@@ -108,7 +108,7 @@ public class GridEditorGui extends JFrame {
 		
 		// Sets directory to user's home directory
 		openFileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		openFileChooser.setFileFilter(new FileNameExtensionFilter("TANG files", "tang"));
+		openFileChooser.setFileFilter(new FileNameExtensionFilter("TAN files", "tan"));
 		
 		initGrid();
 				
@@ -187,7 +187,7 @@ public class GridEditorGui extends JFrame {
 		// New File handler
 		mntmNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		//TODO Code to create new TANG file
+		//TODO Code to create new TAN file
 			}
 		});
 		
@@ -198,13 +198,13 @@ public class GridEditorGui extends JFrame {
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION){
 					try{
-						File tangFile = openFileChooser.getSelectedFile();
-						//currentFile=tangFile.getAbsolutePath();
+						File tanFile = openFileChooser.getSelectedFile();
+						//currentFile=tanFile.getAbsolutePath();
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
 						ArrayList<Frame> temp=new ArrayList<Frame>();
-						temp = TangFile.readFile(tangFile);
+						temp = TanFile.readFile(tanFile);
 						if(temp.size()==0){
 							return;
 						}
@@ -233,7 +233,7 @@ public class GridEditorGui extends JFrame {
 		// Save File handler
 		mntmSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		//TODO add code for saving tang file		
+		//TODO add code for saving tan file		
 			}
 		});
 		

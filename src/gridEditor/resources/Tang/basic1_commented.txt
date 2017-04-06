@@ -2,7 +2,7 @@
 // 3 nodes in the top row and disappearing in the final grid.
 // Each grid should appear in 1 second increments.
 0.1 // The program version number
-NoAudioFile // No audio file associated with the tang file
+NoAudioFile // No audio file associated with the tan file
 255 0 0 // The value in RGB (red) for the current state of the color wheel
 169 169 169 128 128 0 139 0 139 0 139 139 0 0 139 0 100 0 139 0 0 0 0 0 128 128 128 255 255 0 255 0 255 0 255 255 0 0 255 0 128 0 255 0 0 255 255 255 // The values in RGB of the 16 recently used colors
 4 3 3 // The number of grids (4) and the dimensions of all grids in the file (3x3)

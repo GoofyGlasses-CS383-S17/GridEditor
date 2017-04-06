@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class TangFile {
+public class TanFile {
 
 	public static ArrayList<Frame> readFile(File filename) {
 		String line;

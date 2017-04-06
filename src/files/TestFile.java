@@ -40,12 +40,12 @@ public class TestFile {
 			testList.add(test);
 		}
 		
-		WriteFile.writeFile("test.tang", testList);
+		WriteFile.writeFile("test.tan", testList);
 		
 		// read file test
 		ArrayList<Frame> tempGrid;
 		tempGrid = new ArrayList<Frame>();
-		ReadFile.readFile("test.tang", tempGrid);
+		ReadFile.readFile("test.tan", tempGrid);
 		
 		
 		System.out.println("The End");
