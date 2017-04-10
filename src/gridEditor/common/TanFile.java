@@ -80,7 +80,7 @@ public class TanFile {
 
 	}
 	
-	public void writeFile(String filename, ArrayList<Frame> grid) {
+	public static void writeFile(File filename, ArrayList<Frame> grid) {
 		int gridCount = grid.size();
 		Frame oneFrame;
 		Node[][] oneNode;

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import files.WriteFile;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
@@ -237,7 +239,24 @@ public class GridEditorGui extends JFrame {
 		mntmSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		//TODO add code for saving tan file		
+		// code for saving tan file		
+				try {
+					File tanSaveFile = openFileChooser.getSelectedFile();
+					if(!tanSaveFile.getName().endsWith(".tan")) {
+						String path = tanSaveFile.getAbsolutePath() + ".tan";
+						File newSaveFile = new File(path);
+						TanFile.writeFile(newSaveFile, frames);
+					}
+					else {
+						TanFile.writeFile(tanSaveFile, frames);	
+					}
+				}
+				catch(Exception e1) {
+					// show message for no filename given
+					System.err.println("Error no filename specified!");
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "no filename given");
+				}
 			}
 		});
 		
@@ -245,8 +264,21 @@ public class GridEditorGui extends JFrame {
 		mntmSaveAs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		// TODO add code for the Save as function
+				// code for the Save as function
+				int returnValue = openFileChooser.showSaveDialog(mntmSaveAs);
 				
+				if(returnValue == JFileChooser.APPROVE_OPTION) {
+					File tanSaveFile = openFileChooser.getSelectedFile();
+					// check for tan extension
+					if(!tanSaveFile.getName().endsWith(".tan")) {
+						String path = tanSaveFile.getAbsolutePath() + ".tan";
+						File newSaveFile = new File(path);
+						TanFile.writeFile(newSaveFile, frames);
+					}
+					else {
+						TanFile.writeFile(tanSaveFile, frames);	
+					}
+				}
 			}
 		});
 		
