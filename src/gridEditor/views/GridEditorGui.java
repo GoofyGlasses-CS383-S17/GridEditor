@@ -489,6 +489,7 @@ public class GridEditorGui extends JFrame {
 							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
 							// redraw the grid
 							initGrid();
+							createNodeButtonEventHandlers();
 					     }
 						
 					}
