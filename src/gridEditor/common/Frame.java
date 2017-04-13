@@ -71,7 +71,7 @@ public class Frame {
 				frameImage.setRGB(c, r, grid[r][c].getColor().getRGB());			
 			}
 		}
-		Image scaledImage = frameImage.getScaledInstance(grid.length * 10, grid.length * 10, Image.SCALE_FAST);
+		Image scaledImage = frameImage.getScaledInstance(grid[0].length * 10, grid.length * 10, Image.SCALE_FAST);
 		return new ImageIcon(scaledImage);
 	}
 }
