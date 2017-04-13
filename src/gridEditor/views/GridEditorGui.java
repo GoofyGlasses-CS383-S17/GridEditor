@@ -2,6 +2,7 @@ package gridEditor.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.border.BevelBorder;
@@ -24,7 +25,6 @@ import java.awt.event.ActionEvent;
 import gridEditor.common.*;
 
 import javax.swing.*;
-
 
 
 public class GridEditorGui extends JFrame {
@@ -51,9 +51,11 @@ public class GridEditorGui extends JFrame {
 //	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
 	private JPanel previewPanel;
-	private JPanel addframePanel;
+	private JPanel frameActionPanel;
 	private JPanel frameEditPanel;
 	private JScrollPane scrollPane;
+	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
+	private int revertFrame;
 
 	/**
 	 * Launch the application.
@@ -165,15 +167,92 @@ public class GridEditorGui extends JFrame {
 		contentPane.add(frameEditPanel, BorderLayout.CENTER);
 		
 		// Add a "+" Button to add a frame (Added here as button should never move or change)
-		addframePanel = new JPanel();
-		frameEditPanel.add(addframePanel);
-		addframePanel.add(new JButton("Add Frame (+)"));
-		
-		createAddFrameEventHandler();
+		frameActionPanel = new JPanel();
+		frameEditPanel.add(frameActionPanel);
+		frameActionPanel.add(new JButton("Add Frame (+)"));
+		frameActionPanel.add(new JButton("Play"));
+		frameActionPanel.add(new JButton("Stop"));
+		frameActionPanel.add(new JButton("Pause"));
+
+		createAddFrameEventHandler(frameActionPanel.getComponent(0));
+		createPlayEventHandler(frameActionPanel.getComponent(1));
+		createStopEventHandler(frameActionPanel.getComponent(2));
+		createPauseEventHandler(frameActionPanel.getComponent(3));
+
 		//TODO: add the "-" button to remove frames as well
 		
 		
 		}
+	}
+	
+	private void createPlayEventHandler(Component playButton){
+		playButton.addMouseListener(new AnimationButtonActionListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg1) {
+				revertFrame = currentFrame;
+				animationStatus = AnimationStatus.ANIMATING;
+				Runnable updateGUIFrame = new Runnable(){
+					public void run(){
+						initGrid();
+						createNodeButtonEventHandlers();
+					}
+				};
+				
+				// Start a separate thread to run the animation
+				Thread animateThread = new Thread(){
+					public void run(){
+						while(animationStatus == AnimationStatus.ANIMATING && currentFrame < frames.size()){
+							// Tell the event dispatch thread to update the GUI
+							SwingUtilities.invokeLater(updateGUIFrame);
+							int sleepTime = getFrameDuration(currentFrame);
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							currentFrame++;
+						}
+						
+						// This is executed after the animation is paused or stopped
+						currentFrame--;
+						if(animationStatus != AnimationStatus.PAUSED){
+							currentFrame = revertFrame;
+							SwingUtilities.invokeLater(updateGUIFrame);
+						}
+						animationStatus = AnimationStatus.STOPPED;
+					}
+				};
+				animateThread.start();
+			}
+		});
+	}
+	
+	private int getFrameDuration(int frameNumber){
+		// Default nextStartTime to 1 second beyond the last frame
+		int nextStartTime = frames.get(frames.size()-1).getStartingTime() + 1000;
+		if(frameNumber < frames.size()-1){
+			nextStartTime = frames.get(frameNumber+1).getStartingTime();
+		}
+		return nextStartTime - frames.get(frameNumber).getStartingTime();
+	}
+	
+	private void createStopEventHandler(Component stopButton){
+		stopButton.addMouseListener(new AnimationButtonActionListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg1) {
+				animationStatus = AnimationStatus.STOPPED;
+				
+			}
+		});
+	}
+	
+	private void createPauseEventHandler(Component pauseButton){
+		pauseButton.addMouseListener(new AnimationButtonActionListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg1) {
+				animationStatus = AnimationStatus.PAUSED;
+			}
+		});
 	}
 		
 	////////////////////////////////////////////////////
@@ -388,45 +467,43 @@ public class GridEditorGui extends JFrame {
 	}
 
 	/////////////////////////////////////////////////////
-	// This method creates event handlers for the add 
+	// This method creates event handler for the add 
 	// frame button
 	/////////////////////////////////////////////////////
-	private void createAddFrameEventHandler(){
-		for(int l=0; l < addframePanel.getComponentCount(); l++){
-			addframePanel.getComponent(l).addMouseListener(new FrameButtonActionListener(l){
-				@Override
-				public void mouseClicked(MouseEvent arg1) {
-					
-					// Acts very similar to the ReadFile.java class, need to get copy of current frame
-					// and put it in the frames array list (add a new frame to out current list of frames)
-					Frame tempFrame = new Frame();
-					tempFrame.setStartingTime(frames.size() + 1);			// Not sure what value goes here yet (later functionality?)
-					Node[][] tempNodeArr = new Node[gridRows][gridCols];
-						
-					for(int j=0; j<gridRows; j++)
-					{
-						for(int k=0; k<gridCols; k++) 
-						{
-							//get color value
-							Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
-							//assign color to current node
-							Node tempNode = new Node();
-							tempNode.setColor(tempColor);
-							tempNodeArr[j][k] = tempNode;
-						}
-					}
-					// add node to the Frame
-					//tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
-					tempFrame.setNodeGrid(tempNodeArr);						// is required
+	private void createAddFrameEventHandler(Component addFrameButton ){
+		addFrameButton.addMouseListener(new FrameButtonActionListener(-1){
+			@Override
+			public void mouseClicked(MouseEvent arg1) {
 				
-					// Add this copied frame to our list of frames
-					frames.add(tempFrame);
+				// Acts very similar to the ReadFile.java class, need to get copy of current frame
+				// and put it in the frames array list (add a new frame to out current list of frames)
+				Frame tempFrame = new Frame();
+				tempFrame.setStartingTime(frames.size() + 1);			// Not sure what value goes here yet (later functionality?)
+				Node[][] tempNodeArr = new Node[gridRows][gridCols];
 					
-					initGrid();
-					createNodeButtonEventHandlers();
+				for(int j=0; j<gridRows; j++)
+				{
+					for(int k=0; k<gridCols; k++) 
+					{
+						//get color value
+						Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
+						//assign color to current node
+						Node tempNode = new Node();
+						tempNode.setColor(tempColor);
+						tempNodeArr[j][k] = tempNode;
+					}
 				}
-			});
-		}
+				// add node to the Frame
+				//tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
+				tempFrame.setNodeGrid(tempNodeArr);						// is required
+			
+				// Add this copied frame to our list of frames
+				frames.add(tempFrame);
+				
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
 	}
 
 	/////////////////////////////////////////////////////
