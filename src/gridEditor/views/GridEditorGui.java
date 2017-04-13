@@ -198,7 +198,7 @@ public class GridEditorGui extends JFrame {
 					}
 				};
 				
-				// Start a separate to run the animation
+				// Start a separate thread to run the animation
 				Thread animateThread = new Thread(){
 					public void run(){
 						while(animationStatus == AnimationStatus.ANIMATING && currentFrame < frames.size()){
