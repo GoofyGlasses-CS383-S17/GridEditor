@@ -356,13 +356,6 @@ public class GridEditorGui extends JFrame {
 			for(int c = 0; c < gridCols; c++){
 				createNodeButton(r, c);
 				gridPanel.add(btnGrid[r][c]);
-				if (frames != null){
-					Color current=frames.get(currentFrame).getNodeColor(r, c);
-					if (current != null){
-						btnGrid[r][c].setOpaque(true);
-						btnGrid[r][c].setBackground(current);
-					}
-				}
 			}
 		}
 		
