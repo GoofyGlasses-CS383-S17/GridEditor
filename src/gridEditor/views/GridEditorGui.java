@@ -35,7 +35,7 @@ public class GridEditorGui extends JFrame {
 	private JPanel gridPanel;
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
-	private int gridCols = 10;
+	private int gridCols = 20;
 	private int gridCellWidth = 25;
 	private int gridCellHeight = 25;
 	private JLabel[][] btnGrid;
@@ -460,7 +460,47 @@ public class GridEditorGui extends JFrame {
 		mntmNew.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		//TODO Code to create new TAN file
+				//Code to create new TAN file
+
+				JTextField rows = new JTextField(3);
+				JTextField columns = new JTextField(3);
+				JPanel newPanel = new JPanel();
+				newPanel.add(new JLabel("rows:"));
+				newPanel.add(rows);
+				newPanel.add(Box.createHorizontalStrut(10));
+				newPanel.add(new JLabel("columns:"));
+				newPanel.add(columns);
+				
+				// pop up menu prompt for grid dimensions
+				try {
+					boolean validInput = false;
+					do {
+						int result = JOptionPane.showConfirmDialog(null, newPanel, "Enter frame dimensions", JOptionPane.OK_CANCEL_OPTION);
+						if (result == JOptionPane.OK_OPTION) {
+							if(!isInteger(rows.getText()) || !isInteger(columns.getText())) {
+								JOptionPane.showMessageDialog(null, "Must enter an integer from 1 to 20.");
+							}
+							else {
+								gridRows = Integer.parseInt(rows.getText());
+								gridCols = Integer.parseInt(columns.getText());	
+								validInput = true;
+							}
+						}
+						if (result == JOptionPane.CANCEL_OPTION) {
+							break;
+						}
+					} while(!validInput);
+					
+					if (validInput) {
+						initComponents();
+						createEvents();
+					}
+				}
+				catch(Exception e2) {
+					JOptionPane.showMessageDialog(null, "Error Entering Dimensions");
+				}
+				
+				
 			}
 		});
 		
@@ -521,10 +561,7 @@ public class GridEditorGui extends JFrame {
 					}
 				}
 				catch(Exception e1) {
-					// show message for no filename given
-					System.err.println("Error no filename specified!");
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "no filename given");
+					saveAsDialog(mntmSaveAs);
 				}
 			}
 		});
@@ -533,21 +570,7 @@ public class GridEditorGui extends JFrame {
 		mntmSaveAs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// code for the Save as function
-				int returnValue = openFileChooser.showSaveDialog(mntmSaveAs);
-				
-				if(returnValue == JFileChooser.APPROVE_OPTION) {
-					File tanSaveFile = openFileChooser.getSelectedFile();
-					// check for tan extension
-					if(!tanSaveFile.getName().endsWith(".tan")) {
-						String path = tanSaveFile.getAbsolutePath() + ".tan";
-						File newSaveFile = new File(path);
-						TanFile.writeFile(newSaveFile, frames);
-					}
-					else {
-						TanFile.writeFile(tanSaveFile, frames);	
-					}
-				}
+				saveAsDialog(mntmSaveAs);
 			}
 		});
 		
@@ -576,7 +599,44 @@ public class GridEditorGui extends JFrame {
 		createNodeButtonEventHandlers();
 	
 	}
-	
+	/////////////////////////////////////////////////////
+	// Method for SaveAs and Save
+	// Opens up dialog box for saving a file
+	/////////////////////////////////////////////////////
+	private void saveAsDialog(JMenuItem mntmSaveAs){
+		int returnValue = openFileChooser.showSaveDialog(mntmSaveAs);
+		
+		if(returnValue == JFileChooser.APPROVE_OPTION) {
+			File tanSaveFile = openFileChooser.getSelectedFile();
+			// check for tan extension
+			if(!tanSaveFile.getName().endsWith(".tan")) {
+				String path = tanSaveFile.getAbsolutePath() + ".tan";
+				File newSaveFile = new File(path);
+				TanFile.writeFile(newSaveFile, frames);
+			}
+			else {
+				TanFile.writeFile(tanSaveFile, frames);	
+			}
+		}
+	}
+	/////////////////////////////////////////////////////
+	// Method to determine if input string is an integer 
+	// from 1 to 20 - valid row and column sizes
+	/////////////////////////////////////////////////////
+	private boolean isInteger(String n) {
+		boolean validity = false;
+		try {
+			int i =Integer.parseInt(n);
+			if(i > 0 && i < 21) {
+				validity = true;
+			}
+		}
+		catch(Exception e) {
+			validity = false;
+		}
+		return validity;
+	}
+
 	/////////////////////////////////////////////////////
 	// This method will be used to initialize the grid
 	// Called at the start, and when a file is opened
