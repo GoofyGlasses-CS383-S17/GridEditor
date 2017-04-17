@@ -36,8 +36,6 @@ public class GridEditorGui extends JFrame {
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
 	private int gridCols = 20;
-	private int gridCellWidth = 25;
-	private int gridCellHeight = 25;
 	private JLabel[][] btnGrid;
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmNew;
@@ -48,9 +46,12 @@ public class GridEditorGui extends JFrame {
 	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
 	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
 	private JMenuItem mntmAbout;
-//	private String currentFile; //stores currently opened file for saving purposes
+	private JButton shiftUp; 
+	private JButton shiftDown;
+	private JButton shiftLeft;
+	private JButton shiftRight;
+	private String currentFile; //stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
-//	private ArrayList<JButton> btnFrame;
 	private int currentFrame=0;
 	private JPanel gridConfigurePanel;
 	private JPanel previewPanel;
@@ -173,55 +174,50 @@ public class GridEditorGui extends JFrame {
 		contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 		
 		// Add directional up button
-		JButton upArrow = new JButton();
+		shiftUp = new JButton();
 		try 
 		{
 			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-up.png"));
-			upArrow.setIcon(new ImageIcon(img));
+			shiftUp.setIcon(new ImageIcon(img));
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}
-		gridConfigurePanel.add(upArrow);
+		gridConfigurePanel.add(shiftUp);
 				
 				
 		// Add directional down button
-		JButton downArrow = new JButton();
+		shiftDown = new JButton();
 		try 
 		{
 			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-down.png"));
-			downArrow.setIcon(new ImageIcon(img));
+			shiftDown.setIcon(new ImageIcon(img));
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}  
-		gridConfigurePanel.add(downArrow);
+		gridConfigurePanel.add(shiftDown);
 		
 		// Add directional left button
-		JButton leftArrow = new JButton();
+		shiftLeft = new JButton();
 		try 
 		{
 			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-left.png"));
-			leftArrow.setIcon(new ImageIcon(img));
+			shiftLeft.setIcon(new ImageIcon(img));
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}
-		gridConfigurePanel.add(leftArrow);
+		gridConfigurePanel.add(shiftLeft);
 				
 				
 		// Add directional right button
-		JButton rightArrow = new JButton();
+		shiftRight = new JButton();
 		try 
 		{
 			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-right.png"));
-			rightArrow.setIcon(new ImageIcon(img));
+			shiftRight.setIcon(new ImageIcon(img));
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}  
-		gridConfigurePanel.add(rightArrow);
-		
-		createMoveNodesUpEventHandler(gridConfigurePanel.getComponent(0));
-		createMoveNodesDownEventHandler(gridConfigurePanel.getComponent(1));
-		createMoveNodesLeftEventHandler(gridConfigurePanel.getComponent(2));
-		createMoveNodesRightEventHandler(gridConfigurePanel.getComponent(3));
+		gridConfigurePanel.add(shiftRight);
 			
 		// Add Frame Edit Panel
 		contentPane.add(frameEditPanel, BorderLayout.NORTH);
@@ -311,136 +307,6 @@ public class GridEditorGui extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg1) {
 				animationStatus = AnimationStatus.PAUSED;
-			}
-		});
-	}
-	
-	///////////////////////////////////////////////////////
-	// These following methods creates event handlers for 
-	// moving all the nodes in a direction
-	///////////////////////////////////////////////////////
-	private void createMoveNodesUpEventHandler(Component upButton)
-	{
-		upButton.addMouseListener(new NodeDirectionButtonActionListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent arg1){
-				// Create an array of Colors (This is to hold row 1 colors, as they will
-				// be changed before the last row can access them, so we must store them)
-				Color rowColor[] = new Color[gridCols];
-				
-				// Go through each row and column, have the current node take the color of the next
-				// row (which will be below it) making it appear as the nodes are moving up
-				for(int r = 0; r < gridRows; r++){
-					for(int c = 0; c < gridCols; c++){
-						Color next;
-						if (r < gridRows - 1)
-							next = frames.get(currentFrame).getNodeColor(r+1, c);
-						else
-							next = rowColor[c];
-						if (r == 0)
-							rowColor[c] = frames.get(currentFrame).getNodeColor(0, c);
-						btnGrid[r][c].setOpaque(true);
-						btnGrid[r][c].setBackground(next);
-						frames.get(currentFrame).setNodeColor(r, c, next);
-					}
-				}
-				// redraw the grid
-				initGrid();
-				createNodeButtonEventHandlers();
-			}					
-		});
-	}
-	
-	private void createMoveNodesDownEventHandler(Component downButton){
-		downButton.addMouseListener(new NodeDirectionButtonActionListener(){
-			@Override
-			public void mouseClicked(MouseEvent arg1){
-				// Create an array of Colors (This is to hold last row colors, as they will
-				// be changed before the first row can access them, so we must store them)
-				Color rowColor[] = new Color[gridCols];
-				
-				// Go through each row and column, have the current node take the color of the previous
-				// row (which will be above it) making it appear as the nodes are moving down
-				for(int r = gridRows-1; r >= 0; r--){
-					for(int c = 0; c < gridCols; c++){
-						Color next;
-						if (r >= 1)
-							next = frames.get(currentFrame).getNodeColor(r-1, c);
-						else
-							next = rowColor[c];
-						if (r == gridRows-1)
-							rowColor[c] = frames.get(currentFrame).getNodeColor(gridRows-1, c);
-						btnGrid[r][c].setOpaque(true);
-						btnGrid[r][c].setBackground(next);
-						frames.get(currentFrame).setNodeColor(r, c, next);
-					}
-				}
-				// redraw the grid
-				initGrid();
-				createNodeButtonEventHandlers();
-			}
-		});
-	}
-	
-	private void createMoveNodesLeftEventHandler(Component leftButton){
-		leftButton.addMouseListener(new NodeDirectionButtonActionListener(){
-			@Override
-			public void mouseClicked(MouseEvent arg1){
-				// Create an array of Colors (This is to hold column 1 colors, as they will
-				// be changed before the last column can access them, so we must store them)
-				Color rowColor[] = new Color[gridRows];
-				
-				// Go through each row and column, have the current node take the color of the next
-				// column (which will be to the right) making it appear as the nodes are moving left
-				for(int r = 0; r < gridRows; r++){
-					for(int c = 0; c < gridCols; c++){
-						Color next;
-						if (c < gridCols - 1)
-							next = frames.get(currentFrame).getNodeColor(r, c+1);
-						else
-							next = rowColor[r];
-						if (c == 0)
-							rowColor[r] = frames.get(currentFrame).getNodeColor(r, 0);
-						btnGrid[r][c].setOpaque(true);
-						btnGrid[r][c].setBackground(next);
-						frames.get(currentFrame).setNodeColor(r, c, next);
-					}
-				}
-				// redraw the grid
-				initGrid();
-				createNodeButtonEventHandlers();
-			}
-		});
-	}
-	
-	private void createMoveNodesRightEventHandler(Component rightButton){
-		rightButton.addMouseListener(new NodeDirectionButtonActionListener(){
-			@Override
-			public void mouseClicked(MouseEvent arg1){
-				// Create an array of Colors (This is to hold last col of colors, as they will
-				// be changed before the first col can access them, so we must store them)
-				Color rowColor[] = new Color[gridRows];
-				
-				// Go through each row and column, have the current node take the color of the previous
-				// col (which will be to the left) making it appear as the nodes are moving right
-				for(int r = 0; r < gridRows; r++){
-					for(int c = gridCols - 1; c >= 0; c--){
-						Color next;
-						if (c >= 1)
-							next = frames.get(currentFrame).getNodeColor(r, c-1);
-						else
-							next = rowColor[r];
-						if (c == gridCols - 1)
-							rowColor[r] = frames.get(currentFrame).getNodeColor(r, gridCols-1);
-						btnGrid[r][c].setOpaque(true);
-						btnGrid[r][c].setBackground(next);
-						frames.get(currentFrame).setNodeColor(r, c, next);
-					}
-				}
-				// redraw the grid
-				initGrid();
-				createNodeButtonEventHandlers();
 			}
 		});
 	}
@@ -594,7 +460,124 @@ public class GridEditorGui extends JFrame {
 		// TODO code to adjust grid size		
 			}
 		});
+		/////////////////////////////////////////////////////////
+		// Event Handlers for the cell shifting buttons
+		////////////////////////////////////////////////////////
+		shiftUp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create an array of Colors (This is to hold row 1 colors, as they will
+				// be changed before the last row can access them, so we must store them)
+				Color rowColor[] = new Color[gridCols];
+
+				// Go through each row and column, have the current node take the color of the next
+				// row (which will be below it) making it appear as the nodes are moving up
+				for(int r = 0; r < gridRows; r++){
+					for(int c = 0; c < gridCols; c++){
+						Color next;
+						if (r < gridRows - 1)
+							next = frames.get(currentFrame).getNodeColor(r+1, c);
+						else
+							next = rowColor[c];
+						if (r == 0)
+							rowColor[c] = frames.get(currentFrame).getNodeColor(0, c);
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(next);
+						frames.get(currentFrame).setNodeColor(r, c, next);
+					}
+				}
+				// redraw the grid
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
 		
+		shiftDown.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				// Create an array of Colors (This is to hold last row colors, as they will
+				// be changed before the first row can access them, so we must store them)
+				Color rowColor[] = new Color[gridCols];
+
+				// Go through each row and column, have the current node take the color of the previous
+				// row (which will be above it) making it appear as the nodes are moving down
+				for(int r = gridRows-1; r >= 0; r--){
+					for(int c = 0; c < gridCols; c++){
+						Color next;
+						if (r >= 1)
+							next = frames.get(currentFrame).getNodeColor(r-1, c);
+						else
+							next = rowColor[c];
+						if (r == gridRows-1)
+							rowColor[c] = frames.get(currentFrame).getNodeColor(gridRows-1, c);
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(next);
+						frames.get(currentFrame).setNodeColor(r, c, next);
+					}
+				}
+				// redraw the grid
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
+		
+		shiftLeft.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				// Create an array of Colors (This is to hold column 1 colors, as they will
+				// be changed before the last column can access them, so we must store them)
+				Color rowColor[] = new Color[gridRows];
+
+				// Go through each row and column, have the current node take the color of the next
+				// column (which will be to the right) making it appear as the nodes are moving left
+				for(int r = 0; r < gridRows; r++){
+					for(int c = 0; c < gridCols; c++){
+						Color next;
+						if (c < gridCols - 1)
+							next = frames.get(currentFrame).getNodeColor(r, c+1);
+						else
+							next = rowColor[r];
+						if (c == 0)
+							rowColor[r] = frames.get(currentFrame).getNodeColor(r, 0);
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(next);
+						frames.get(currentFrame).setNodeColor(r, c, next);
+					}
+				}
+				// redraw the grid
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
+		
+		shiftRight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create an array of Colors (This is to hold last col of colors, as they will
+				// be changed before the first col can access them, so we must store them)
+				Color rowColor[] = new Color[gridRows];
+
+				// Go through each row and column, have the current node take the color of the previous
+				// col (which will be to the left) making it appear as the nodes are moving right
+				for(int r = 0; r < gridRows; r++){
+					for(int c = gridCols - 1; c >= 0; c--){
+						Color next;
+						if (c >= 1)
+							next = frames.get(currentFrame).getNodeColor(r, c-1);
+						else
+							next = rowColor[r];
+						if (c == gridCols - 1)
+							rowColor[r] = frames.get(currentFrame).getNodeColor(r, gridCols-1);
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(next);
+						frames.get(currentFrame).setNodeColor(r, c, next);
+					}
+				}
+				// redraw the grid
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
 		//node buttons
 		createNodeButtonEventHandlers();
 	
