@@ -98,7 +98,6 @@ public class GridEditorGui extends JFrame {
 	// and initializing components
 	/////////////////////////////////////////////////////
 	private void initComponents() {
-		
 		setTitle("GoofyGlasses Editor");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -349,6 +348,7 @@ public class GridEditorGui extends JFrame {
 							else {
 								gridRows = Integer.parseInt(rows.getText());
 								gridCols = Integer.parseInt(columns.getText());	
+								frames = null;
 								validInput = true;
 							}
 						}
@@ -383,6 +383,7 @@ public class GridEditorGui extends JFrame {
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
+						frames = null;
 						ArrayList<Frame> temp=new ArrayList<Frame>();
 						temp = TanFile.readFile(tanFile);
 						if(temp.size()==0){
