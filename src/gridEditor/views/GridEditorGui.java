@@ -1,5 +1,7 @@
 package gridEditor.views;
 
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -7,7 +9,7 @@ import java.awt.EventQueue;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-
+import javax.swing.colorchooser.ColorSelectionModel;
 import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -16,7 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import files.WriteFile;
 
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
+import javafx.scene.control.ColorPicker;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -50,6 +52,8 @@ public class GridEditorGui extends JFrame {
 	private JButton shiftDown;
 	private JButton shiftLeft;
 	private JButton shiftRight;
+	private JColorChooser colorChooser;	
+	//private ColorPicker colorPicker;
 	private String currentFile; //stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
 	private int currentFrame=0;
@@ -57,6 +61,9 @@ public class GridEditorGui extends JFrame {
 	private JPanel previewPanel;
 	private JPanel frameActionPanel;
 	private JPanel frameEditPanel;
+	private JPanel colorPanel;
+	private JPanel buttonPanel;
+	private Color color;
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
@@ -113,6 +120,8 @@ public class GridEditorGui extends JFrame {
 		gridConfigurePanel = new JPanel();
 		gridConfigurePanel.setBorder(new EmptyBorder(5, 40, 5, 40));
 		frameEditPanel = new JPanel();
+		colorPanel = new JPanel();
+		
 		
 		openFileChooser = new JFileChooser();
 		
@@ -169,8 +178,13 @@ public class GridEditorGui extends JFrame {
 			frames.add(new Frame(gridRows, gridCols));
 			
 			
+			
+			
+			
+		
 		// Add direction buttons Panel to right of Grid Panel
 		contentPane.add(gridConfigurePanel, BorderLayout.EAST);
+		buttonPanel = new JPanel();
 		
 		// Add directional up button
 		shiftUp = new JButton();
@@ -181,7 +195,7 @@ public class GridEditorGui extends JFrame {
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}
-		gridConfigurePanel.add(shiftUp);
+		buttonPanel.add(shiftUp);
 				
 				
 		// Add directional down button
@@ -193,7 +207,7 @@ public class GridEditorGui extends JFrame {
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}  
-		gridConfigurePanel.add(shiftDown);
+		buttonPanel.add(shiftDown);
 		
 		// Add directional left button
 		shiftLeft = new JButton();
@@ -204,7 +218,7 @@ public class GridEditorGui extends JFrame {
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}
-		gridConfigurePanel.add(shiftLeft);
+		buttonPanel.add(shiftLeft);
 				
 				
 		// Add directional right button
@@ -216,8 +230,14 @@ public class GridEditorGui extends JFrame {
 		}catch (Exception ex) {
 			System.out.println(ex);
 		}  
-		gridConfigurePanel.add(shiftRight);
-			
+		buttonPanel.add(shiftRight);
+		
+		gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
+		colorPanel = new JPanel();
+		colorChooser = new JColorChooser();
+		colorPanel.add(colorChooser,BorderLayout.SOUTH);
+		gridConfigurePanel.add(colorPanel,BorderLayout.SOUTH);
+		
 		// Add Frame Edit Panel
 		contentPane.add(frameEditPanel, BorderLayout.NORTH);
 		
@@ -758,48 +778,18 @@ public class GridEditorGui extends JFrame {
 
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						//System.out.println("Row: " + this.getRow() + " Col: " + this.getCol());
-					    JTextField RedField = new JTextField(4);
-					    JTextField GreenField = new JTextField(4);
-					    JTextField BlueField = new JTextField(4);
-					    Color current=frames.get(currentFrame).getNodeColor(this.getRow(), this.getCol());
-					    //populate fields with current values
-					    if(current!=null){
-					    	RedField.setText(Integer.toString(current.getRed()));
-					    	GreenField.setText(Integer.toString(current.getGreen()));
-					    	BlueField.setText(Integer.toString(current.getBlue()));
-					    }
-					    JPanel ColorPanel = new JPanel();
-					    ColorPanel.add(new JLabel("RED:"));
-					    ColorPanel.add(RedField);
-					    ColorPanel.add(Box.createHorizontalStrut(15)); // a spacer
-					    ColorPanel.add(new JLabel("GREEN:"));
-					    ColorPanel.add(GreenField);
-					    ColorPanel.add(Box.createHorizontalStrut(15));
-					    ColorPanel.add(new JLabel("BLUE:"));
-					    ColorPanel.add(BlueField);
-					     
-					     int result = JOptionPane.showConfirmDialog(null, ColorPanel, 
-					              "Please Enter RGB Values", JOptionPane.OK_CANCEL_OPTION);
-					     if (result == JOptionPane.OK_OPTION){
-					    	String red_s = RedField.getText();
-					    	String green_s = GreenField.getText();
-					    	String blue_s = BlueField.getText();
-					    	int red_i = red_s.isEmpty() ? 0 : Integer.parseInt(red_s);
-						    int green_i = green_s.isEmpty() ? 0 : Integer.parseInt(green_s);
-							int blue_i = blue_s.isEmpty() ? 0 : Integer.parseInt(blue_s);
-							//System.out.printf("RED: %d, GREEN: %d, BLUE: %d\n",red_i,green_i,blue_i);
-							java.awt.Color temp_color = new Color(red_i,green_i,blue_i);
+						
+							color = colorChooser.getColor();
 							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
 							//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
-							btnGrid[this.getRow()][this.getCol()].setBackground(temp_color);
-							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), temp_color);
+							btnGrid[this.getRow()][this.getCol()].setBackground(color);
+							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), color);
 							// redraw the grid
 							initGrid();
 							createNodeButtonEventHandlers();
 					     }
 						
-					}
+					
 					@Override
 					public void mousePressed(MouseEvent e) {
 						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
