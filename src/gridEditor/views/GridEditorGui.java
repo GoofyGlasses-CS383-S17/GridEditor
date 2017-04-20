@@ -119,6 +119,9 @@ public class GridEditorGui extends JFrame {
 		setContentPane(contentPane);
 		gridConfigurePanel = new JPanel();
 		gridConfigurePanel.setBorder(new EmptyBorder(5, 40, 5, 40));
+		gridConfigurePanel.setSize(200, 400);
+		gridConfigurePanel.setLayout(new BorderLayout(0, 0));
+		//gridConfigurePanel.setLayout();
 		frameEditPanel = new JPanel();
 		colorPanel = new JPanel();
 		
