@@ -72,6 +72,7 @@ public class GridEditorGui extends JFrame {
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
+	private int defaultFrameDuration = 100;
 
 	/**
 	 * Launch the application.
@@ -821,7 +822,8 @@ public class GridEditorGui extends JFrame {
 				// Acts very similar to the ReadFile.java class, need to get copy of current frame
 				// and put it in the frames array list (add a new frame to out current list of frames)
 				Frame tempFrame = new Frame();
-				tempFrame.setStartingTime(frames.size() + 1);			// Not sure what value goes here yet (later functionality?)
+				int previousStartingTime = frames.get(frames.size()-1).getStartingTime();
+				tempFrame.setStartingTime(previousStartingTime + defaultFrameDuration);
 				Node[][] tempNodeArr = new Node[gridRows][gridCols];
 					
 				for(int j=0; j<gridRows; j++)
