@@ -15,6 +15,8 @@ import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.PopupMenu;
+import java.awt.MenuItem;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
@@ -34,13 +36,16 @@ import javax.swing.*;
 
 
 public class GridEditorGui extends JFrame {
-
+	int FRAME_AFTER=0;
+	int FRAME_BEFORE=-1;
+	int FRAME_END=1;
 	private JPanel contentPane;
 	private JPanel gridPanel;
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
 	private int gridCols = 20;
 	private JLabel[][] btnGrid;
+	private FramePopupMenu popup;
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmNew;
 	private JMenuItem mntmSave;
@@ -70,6 +75,7 @@ public class GridEditorGui extends JFrame {
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
+	private int defaultFrameDuration = 100;
 
 	/**
 	 * Launch the application.
@@ -108,7 +114,12 @@ public class GridEditorGui extends JFrame {
 	// and initializing components
 	/////////////////////////////////////////////////////
 	private void initComponents() {
-		setTitle("GoofyGlasses Editor");
+		if(currentFile == null){
+			setTitle("GoofyGlasses Editor");
+		}
+		else {
+			setTitle("GoofyGlasses Editor " + currentFile);
+		}
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -122,9 +133,8 @@ public class GridEditorGui extends JFrame {
 		setContentPane(contentPane);
 		gridConfigurePanel = new JPanel();
 		gridConfigurePanel.setBorder(new EmptyBorder(5, 40, 5, 40));
-		gridConfigurePanel.setSize(200, 400);
+		gridConfigurePanel.setSize(100, 400);
 		gridConfigurePanel.setLayout(new BorderLayout(0, 0));
-		//gridConfigurePanel.setLayout();
 		frameEditPanel = new JPanel();
 		colorPanel = new JPanel();
 		
@@ -136,6 +146,8 @@ public class GridEditorGui extends JFrame {
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("TAN files", "tan"));
 		
 		initGrid();
+		
+		createFrameRightClickMenu();
 				
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -191,6 +203,7 @@ public class GridEditorGui extends JFrame {
 		// Add direction buttons Panel to right of Grid Panel
 		contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(2,2));
 		
 		// Add directional up button
 		shiftUp = new JButton();
@@ -241,8 +254,8 @@ public class GridEditorGui extends JFrame {
 		gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
 		colorPanel = new JPanel();
 		colorChooser = new JColorChooser();
-		colorPanel.add(colorChooser,BorderLayout.SOUTH);
-		gridConfigurePanel.add(colorPanel,BorderLayout.SOUTH);
+		colorPanel.add(colorChooser,BorderLayout.CENTER);
+		gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
 		
 		// Add Frame Edit Panel
 		contentPane.add(frameEditPanel, BorderLayout.NORTH);
@@ -405,7 +418,8 @@ public class GridEditorGui extends JFrame {
 				if (returnValue == JFileChooser.APPROVE_OPTION){
 					try{
 						File tanFile = openFileChooser.getSelectedFile();
-						//currentFile=tanFile.getAbsolutePath();
+						currentFile=tanFile.getAbsolutePath();
+						setTitle("GoofyGlasses Editor " + currentFile);
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
@@ -446,11 +460,14 @@ public class GridEditorGui extends JFrame {
 					File tanSaveFile = openFileChooser.getSelectedFile();
 					if(!tanSaveFile.getName().endsWith(".tan")) {
 						String path = tanSaveFile.getAbsolutePath() + ".tan";
+						setTitle("GoofyGlasses Editor " + path);
 						File newSaveFile = new File(path);
 						TanFile.writeFile(newSaveFile, frames);
 					}
 					else {
-						TanFile.writeFile(tanSaveFile, frames);	
+						TanFile.writeFile(tanSaveFile, frames);
+						currentFile = tanSaveFile.getAbsolutePath();
+						setTitle("GoofyGlasses Editor " + currentFile);
 					}
 				}
 				catch(Exception e1) {
@@ -621,11 +638,15 @@ public class GridEditorGui extends JFrame {
 			// check for tan extension
 			if(!tanSaveFile.getName().endsWith(".tan")) {
 				String path = tanSaveFile.getAbsolutePath() + ".tan";
+				currentFile = path;
+				setTitle("GoofyGlasses Editor " + currentFile);
 				File newSaveFile = new File(path);
 				TanFile.writeFile(newSaveFile, frames);
 			}
 			else {
 				TanFile.writeFile(tanSaveFile, frames);	
+				currentFile = tanSaveFile.getAbsolutePath();
+				setTitle("GoofyGlasses Editor " + currentFile);
 			}
 		}
 	}
@@ -719,8 +740,8 @@ public class GridEditorGui extends JFrame {
 		for(int i=0; i < previewPanel.getComponentCount(); i++){
 			previewPanel.getComponent(i).addMouseListener(new FrameButtonActionListener(i){
 				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()!=1) return;//only changes frame on left click
 					int newFrameNumber = this.getFrameNumber();
 					if(newFrameNumber < frames.size()){
 						currentFrame = newFrameNumber;
@@ -732,8 +753,85 @@ public class GridEditorGui extends JFrame {
 					
 					//previewPanel[newFrameNumber].setBackground(black);
 				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e){
+					if(e.isPopupTrigger()){
+						popup.show(e.getComponent(), e.getX(), e.getY());
+						popup.setFrameNumber(this.getFrameNumber());
+					}
+				}
 			});
 		}
+	}
+	
+	//this method creates the right click menu for the frame previews
+	//also adds listeners for the menu items
+	private void createFrameRightClickMenu(){
+		popup = new FramePopupMenu(0);
+	    JMenuItem menuItem=new JMenuItem("Delete Frame");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				deleteFrame(popup.getFrameNumber());
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Blank Frame After");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), false, FRAME_AFTER);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Duplicate Frame After");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_AFTER);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Blank Frame Before");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), false, FRAME_BEFORE);
+			}
+	    });    
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Duplicate Frame Before");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_BEFORE);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Duplicate Frame at End");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_END);
+			}
+	    });
+	    popup.add(menuItem);
+	}
+	
+	//this method handles all creation of new frames
+	void addFrame(int frameNum, boolean copy, int frameLoc){
+		//TODO: Implement this method and have current Add Frame button call this
+	}
+	
+	//this method handles deletion of a frame
+	void deleteFrame(int frameNum){
+		
 	}
 
 	/////////////////////////////////////////////////////
@@ -748,7 +846,8 @@ public class GridEditorGui extends JFrame {
 				// Acts very similar to the ReadFile.java class, need to get copy of current frame
 				// and put it in the frames array list (add a new frame to out current list of frames)
 				Frame tempFrame = new Frame();
-				tempFrame.setStartingTime(frames.size() + 1);
+				int previousStartingTime = frames.get(frames.size()-1).getStartingTime();
+				tempFrame.setStartingTime(previousStartingTime + defaultFrameDuration);
 				Node[][] tempNodeArr = new Node[gridRows][gridCols];
 					
 				for(int j=0; j<gridRows; j++)
