@@ -111,7 +111,12 @@ public class GridEditorGui extends JFrame {
 	// and initializing components
 	/////////////////////////////////////////////////////
 	private void initComponents() {
-		setTitle("GoofyGlasses Editor");
+		if(currentFile == null){
+			setTitle("GoofyGlasses Editor");
+		}
+		else {
+			setTitle("GoofyGlasses Editor " + currentFile);
+		}
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -125,7 +130,7 @@ public class GridEditorGui extends JFrame {
 		setContentPane(contentPane);
 		gridConfigurePanel = new JPanel();
 		gridConfigurePanel.setBorder(new EmptyBorder(5, 40, 5, 40));
-		gridConfigurePanel.setSize(200, 400);
+		gridConfigurePanel.setSize(100, 400);
 		gridConfigurePanel.setLayout(new BorderLayout(0, 0));
 		frameEditPanel = new JPanel();
 		colorPanel = new JPanel();
@@ -195,6 +200,7 @@ public class GridEditorGui extends JFrame {
 		// Add direction buttons Panel to right of Grid Panel
 		contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(2,2));
 		
 		// Add directional up button
 		shiftUp = new JButton();
@@ -409,7 +415,8 @@ public class GridEditorGui extends JFrame {
 				if (returnValue == JFileChooser.APPROVE_OPTION){
 					try{
 						File tanFile = openFileChooser.getSelectedFile();
-						//currentFile=tanFile.getAbsolutePath();
+						currentFile=tanFile.getAbsolutePath();
+						setTitle("GoofyGlasses Editor " + currentFile);
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
@@ -450,11 +457,14 @@ public class GridEditorGui extends JFrame {
 					File tanSaveFile = openFileChooser.getSelectedFile();
 					if(!tanSaveFile.getName().endsWith(".tan")) {
 						String path = tanSaveFile.getAbsolutePath() + ".tan";
+						setTitle("GoofyGlasses Editor " + path);
 						File newSaveFile = new File(path);
 						TanFile.writeFile(newSaveFile, frames);
 					}
 					else {
-						TanFile.writeFile(tanSaveFile, frames);	
+						TanFile.writeFile(tanSaveFile, frames);
+						currentFile = tanSaveFile.getAbsolutePath();
+						setTitle("GoofyGlasses Editor " + currentFile);
 					}
 				}
 				catch(Exception e1) {
@@ -625,11 +635,15 @@ public class GridEditorGui extends JFrame {
 			// check for tan extension
 			if(!tanSaveFile.getName().endsWith(".tan")) {
 				String path = tanSaveFile.getAbsolutePath() + ".tan";
+				currentFile = path;
+				setTitle("GoofyGlasses Editor " + currentFile);
 				File newSaveFile = new File(path);
 				TanFile.writeFile(newSaveFile, frames);
 			}
 			else {
 				TanFile.writeFile(tanSaveFile, frames);	
+				currentFile = tanSaveFile.getAbsolutePath();
+				setTitle("GoofyGlasses Editor " + currentFile);
 			}
 		}
 	}
