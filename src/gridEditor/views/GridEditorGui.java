@@ -8,11 +8,13 @@ import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.colorchooser.ColorSelectionModel;
 import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
@@ -64,6 +66,7 @@ public class GridEditorGui extends JFrame {
 	private JPanel colorPanel;
 	private JPanel buttonPanel;
 	private Color color;
+	private Point p = new Point(0,0);
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
@@ -685,10 +688,15 @@ public class GridEditorGui extends JFrame {
 				previewPanel.add(tempBtn);
 				tempBtn.setIcon(frames.get(f).getFrameIcon());
 				
+				if (currentFrame == f)
+				tempBtn.setBackground(Color.blue);
 			}
 		}
 		
 		createFrameButtonEventHandlers();
+		
+		// Set The Position that was Saved after selecting a frame 
+		scrollPane.getViewport().setViewPosition( p );
 		
 		btnGrid = new JLabel[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
@@ -716,6 +724,8 @@ public class GridEditorGui extends JFrame {
 					int newFrameNumber = this.getFrameNumber();
 					if(newFrameNumber < frames.size()){
 						currentFrame = newFrameNumber;
+						// Save the current position
+						p = scrollPane.getViewport().getViewPosition();
 						initGrid();
 						createNodeButtonEventHandlers();	
 					}
@@ -738,7 +748,7 @@ public class GridEditorGui extends JFrame {
 				// Acts very similar to the ReadFile.java class, need to get copy of current frame
 				// and put it in the frames array list (add a new frame to out current list of frames)
 				Frame tempFrame = new Frame();
-				tempFrame.setStartingTime(frames.size() + 1);			// Not sure what value goes here yet (later functionality?)
+				tempFrame.setStartingTime(frames.size() + 1);
 				Node[][] tempNodeArr = new Node[gridRows][gridCols];
 					
 				for(int j=0; j<gridRows; j++)
@@ -754,11 +764,16 @@ public class GridEditorGui extends JFrame {
 					}
 				}
 				// add node to the Frame
-				//tempFrame.setFrameNum(frames.size() + 1);				// Will need to be change if more advanced frame editing
-				tempFrame.setNodeGrid(tempNodeArr);						// is required
+				tempFrame.setNodeGrid(tempNodeArr);						
 			
 				// Add this copied frame to our list of frames
 				frames.add(tempFrame);
+				
+				currentFrame = frames.size()-1;
+				
+				// Save the End Position of the scroll Pane
+				JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
+				p = new Point(horizontal.getMaximum(), 0);
 				
 				initGrid();
 				createNodeButtonEventHandlers();
