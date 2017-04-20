@@ -13,6 +13,8 @@ import javax.swing.colorchooser.ColorSelectionModel;
 import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
@@ -32,13 +34,16 @@ import javax.swing.*;
 
 
 public class GridEditorGui extends JFrame {
-
+	int FRAME_AFTER=0;
+	int FRAME_BEFORE=-1;
+	int FRAME_END=1;
 	private JPanel contentPane;
 	private JPanel gridPanel;
 	private JFileChooser openFileChooser;
 	private int gridRows = 20;
 	private int gridCols = 20;
 	private JLabel[][] btnGrid;
+	private FramePopupMenu popup;
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmNew;
 	private JMenuItem mntmSave;
@@ -132,6 +137,8 @@ public class GridEditorGui extends JFrame {
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("TAN files", "tan"));
 		
 		initGrid();
+		
+		createFrameRightClickMenu();
 				
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -710,8 +717,8 @@ public class GridEditorGui extends JFrame {
 		for(int i=0; i < previewPanel.getComponentCount(); i++){
 			previewPanel.getComponent(i).addMouseListener(new FrameButtonActionListener(i){
 				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()!=1) return;//only changes frame on left click
 					int newFrameNumber = this.getFrameNumber();
 					if(newFrameNumber < frames.size()){
 						currentFrame = newFrameNumber;
@@ -721,8 +728,85 @@ public class GridEditorGui extends JFrame {
 					
 					//previewPanel[newFrameNumber].setBackground(black);
 				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e){
+					if(e.isPopupTrigger()){
+						popup.show(e.getComponent(), e.getX(), e.getY());
+						popup.setFrameNumber(this.getFrameNumber());
+					}
+				}
 			});
 		}
+	}
+	
+	//this method creates the right click menu for the frame previews
+	//also adds listeners for the menu items
+	private void createFrameRightClickMenu(){
+		popup = new FramePopupMenu(0);
+	    JMenuItem menuItem=new JMenuItem("Delete Frame");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				deleteFrame(popup.getFrameNumber());
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Blank Frame After");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), false, FRAME_AFTER);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Duplicate Frame After");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_AFTER);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Blank Frame Before");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), false, FRAME_BEFORE);
+			}
+	    });    
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Insert Duplicate Frame Before");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_BEFORE);
+			}
+	    });
+	    popup.add(menuItem);
+	    
+	    menuItem=new JMenuItem("Duplicate Frame at End");
+	    menuItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addFrame(popup.getFrameNumber(), true, FRAME_END);
+			}
+	    });
+	    popup.add(menuItem);
+	}
+	
+	//this method handles all creation of new frames
+	void addFrame(int frameNum, boolean copy, int frameLoc){
+		//TODO: Implement this method and have current Add Frame button call this
+	}
+	
+	//this method handles deletion of a frame
+	void deleteFrame(int frameNum){
+		
 	}
 
 	/////////////////////////////////////////////////////
