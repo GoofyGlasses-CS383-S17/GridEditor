@@ -121,7 +121,6 @@ public class GridEditorGui extends JFrame {
 		gridConfigurePanel.setBorder(new EmptyBorder(5, 40, 5, 40));
 		gridConfigurePanel.setSize(200, 400);
 		gridConfigurePanel.setLayout(new BorderLayout(0, 0));
-		//gridConfigurePanel.setLayout();
 		frameEditPanel = new JPanel();
 		colorPanel = new JPanel();
 		
@@ -238,8 +237,8 @@ public class GridEditorGui extends JFrame {
 		gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
 		colorPanel = new JPanel();
 		colorChooser = new JColorChooser();
-		colorPanel.add(colorChooser,BorderLayout.SOUTH);
-		gridConfigurePanel.add(colorPanel,BorderLayout.SOUTH);
+		colorPanel.add(colorChooser,BorderLayout.CENTER);
+		gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
 		
 		// Add Frame Edit Panel
 		contentPane.add(frameEditPanel, BorderLayout.NORTH);
