@@ -114,10 +114,6 @@ public class GridEditorGui extends JFrame {
 	// and initializing components
 	/////////////////////////////////////////////////////
 	private void initComponents() {
-		if(frames==null){
-			frames=new ArrayList<Frame>();
-			frames.add(new Frame(gridRows, gridCols));
-		}
 		if(currentFile == null){
 			setTitle("GoofyGlasses Editor");
 		}
@@ -196,83 +192,86 @@ public class GridEditorGui extends JFrame {
 		mnHelp.add(mntmAbout);
 		
 			
+		if(frames==null){
+			frames=new ArrayList<Frame>();
+			frames.add(new Frame(gridRows, gridCols));
+		
+		
+			// Add direction buttons Panel to right of Grid Panel
+			contentPane.add(gridConfigurePanel, BorderLayout.EAST);
+			buttonPanel = new JPanel();
+			buttonPanel.setLayout(new GridLayout(2,2));
 			
-		
-		// Add direction buttons Panel to right of Grid Panel
-		contentPane.add(gridConfigurePanel, BorderLayout.EAST);
-		buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(2,2));
-		
-		// Add directional up button
-		shiftUp = new JButton();
-		try 
-		{
-			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-up.png"));
-			shiftUp.setIcon(new ImageIcon(img));
-		}catch (Exception ex) {
-			System.out.println(ex);
-		}
-		buttonPanel.add(shiftUp);
-				
-				
-		// Add directional down button
-		shiftDown = new JButton();
-		try 
-		{
-			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-down.png"));
-			shiftDown.setIcon(new ImageIcon(img));
-		}catch (Exception ex) {
-			System.out.println(ex);
-		}  
-		buttonPanel.add(shiftDown);
-		
-		// Add directional left button
-		shiftLeft = new JButton();
-		try 
-		{
-			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-left.png"));
-			shiftLeft.setIcon(new ImageIcon(img));
-		}catch (Exception ex) {
-			System.out.println(ex);
-		}
-		buttonPanel.add(shiftLeft);
-				
-				
-		// Add directional right button
-		shiftRight = new JButton();
-		try 
-		{
-			Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-right.png"));
-			shiftRight.setIcon(new ImageIcon(img));
-		}catch (Exception ex) {
-			System.out.println(ex);
-		}  
-		buttonPanel.add(shiftRight);
-		
-		gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
-		colorPanel = new JPanel();
-		colorChooser = new JColorChooser();
-		colorPanel.add(colorChooser,BorderLayout.CENTER);
-		gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
-		
-		// Add Frame Edit Panel
-		contentPane.add(frameEditPanel, BorderLayout.NORTH);
-		
-		// Add a "+" Button to add a frame (Added here as button should never move or change)
-		frameActionPanel = new JPanel();
-		frameEditPanel.add(frameActionPanel);
-		frameActionPanel.add(new JButton("Add Frame (+)"));
-		frameActionPanel.add(new JButton("Play"));
-		frameActionPanel.add(new JButton("Stop"));
-		frameActionPanel.add(new JButton("Pause"));
-
-		createAddFrameEventHandler(frameActionPanel.getComponent(0));
-		createPlayEventHandler(frameActionPanel.getComponent(1));
-		createStopEventHandler(frameActionPanel.getComponent(2));
-		createPauseEventHandler(frameActionPanel.getComponent(3));
+			// Add directional up button
+			shiftUp = new JButton();
+			try 
+			{
+				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-up.png"));
+				shiftUp.setIcon(new ImageIcon(img));
+			}catch (Exception ex) {
+				System.out.println(ex);
+			}
+			buttonPanel.add(shiftUp);
+					
+					
+			// Add directional down button
+			shiftDown = new JButton();
+			try 
+			{
+				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-down.png"));
+				shiftDown.setIcon(new ImageIcon(img));
+			}catch (Exception ex) {
+				System.out.println(ex);
+			}  
+			buttonPanel.add(shiftDown);
+			
+			// Add directional left button
+			shiftLeft = new JButton();
+			try 
+			{
+				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-left.png"));
+				shiftLeft.setIcon(new ImageIcon(img));
+			}catch (Exception ex) {
+				System.out.println(ex);
+			}
+			buttonPanel.add(shiftLeft);
+					
+					
+			// Add directional right button
+			shiftRight = new JButton();
+			try 
+			{
+				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-right.png"));
+				shiftRight.setIcon(new ImageIcon(img));
+			}catch (Exception ex) {
+				System.out.println(ex);
+			}  
+			buttonPanel.add(shiftRight);
+			
+			gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
+			colorPanel = new JPanel();
+			colorChooser = new JColorChooser();
+			colorPanel.add(colorChooser,BorderLayout.CENTER);
+			gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
+			
+			// Add Frame Edit Panel
+			contentPane.add(frameEditPanel, BorderLayout.NORTH);
+			
+			// Add a "+" Button to add a frame (Added here as button should never move or change)
+			frameActionPanel = new JPanel();
+			frameEditPanel.add(frameActionPanel);
+			frameActionPanel.add(new JButton("Add Frame (+)"));
+			frameActionPanel.add(new JButton("Play"));
+			frameActionPanel.add(new JButton("Stop"));
+			frameActionPanel.add(new JButton("Pause"));
+	
+			createAddFrameEventHandler(frameActionPanel.getComponent(0));
+			createPlayEventHandler(frameActionPanel.getComponent(1));
+			createStopEventHandler(frameActionPanel.getComponent(2));
+			createPauseEventHandler(frameActionPanel.getComponent(3));
 
 		//TODO: add the "-" button to remove frames as well
-		
+		}
 		
 	}
 	
