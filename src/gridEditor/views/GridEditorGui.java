@@ -846,7 +846,7 @@ public class GridEditorGui extends JFrame {
 			previousStartingTime=frames.get(frameNum).getStartingTime();
 			//shifts subsequent Frames' starting times
 			for(int x=frameNum; x<frames.size();x++){
-				frames.get(x).increaseStartingTime(frameDuration);
+				frames.get(x).adjustStartingTime(frameDuration);
 			}
 			frames.add(frameNum, tempFrame);
 			currentFrame = frameNum;
@@ -860,7 +860,7 @@ public class GridEditorGui extends JFrame {
 			}
 			//shifts subsequent Frames' starting times
 			for(int x=frameNum+1; x<frames.size();x++){
-				frames.get(x).increaseStartingTime(frameDuration);
+				frames.get(x).adjustStartingTime(frameDuration);
 			}
 			frames.add(frameNum+1, tempFrame);
 			currentFrame = frameNum+1;
@@ -883,7 +883,24 @@ public class GridEditorGui extends JFrame {
 	
 	//this method handles deletion of a frame
 	void deleteFrame(int frameNum){
-		
+		//if only one frame, clear it
+		if(frames.size()==1){
+			frames.set(0, new Frame(gridRows, gridCols));
+		}
+		//otherwise, remove frame and shift other frames' starting times as needed
+		else{
+			int duration=getFrameDuration(frameNum);
+			frames.remove(frameNum);
+			for(int x=frameNum;x<frames.size();x++){	
+				frames.get(x).adjustStartingTime(0-duration);
+			}
+		}
+		//if last frame was selected, select the new last frame
+		if(currentFrame>frames.size()-1){
+			currentFrame=frames.size()-1;
+		}
+		initGrid();
+		createNodeButtonEventHandlers();
 	}
 
 	/////////////////////////////////////////////////////
