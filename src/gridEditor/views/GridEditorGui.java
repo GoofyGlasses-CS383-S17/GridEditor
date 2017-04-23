@@ -33,6 +33,7 @@ import javafx.scene.control.ColorPicker;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.colorchooser.*;
 
 
 public class GridEditorGui extends JFrame {
@@ -249,6 +250,24 @@ public class GridEditorGui extends JFrame {
 			gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
 			colorPanel = new JPanel();
 			colorChooser = new JColorChooser();
+			colorChooser.setPreviewPanel(new JPanel());
+			AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
+			for(AbstractColorChooserPanel swatchesRGB:panels)
+			{
+				String displayName = swatchesRGB.getDisplayName();
+				switch (displayName)
+				{
+					case "HSV":
+						colorChooser.removeChooserPanel(swatchesRGB);
+						break;
+					case "HSL":
+						colorChooser.removeChooserPanel(swatchesRGB);
+						break;
+					case "CMYK":
+						colorChooser.removeChooserPanel(swatchesRGB);
+						break;
+				}
+			}
 			colorPanel.add(colorChooser,BorderLayout.CENTER);
 			gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
 			
