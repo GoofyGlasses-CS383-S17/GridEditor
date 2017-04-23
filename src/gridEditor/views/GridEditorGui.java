@@ -71,7 +71,7 @@ public class GridEditorGui extends JFrame {
 	private JPanel colorPanel;
 	private JPanel buttonPanel;
 	private Color color;
-	private Point p = new Point(0,0);
+	private Point scrollPoint = new Point(0,0);
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
@@ -714,7 +714,7 @@ public class GridEditorGui extends JFrame {
 		createFrameButtonEventHandlers();
 		
 		// Set The Position that was Saved after selecting a frame 
-		scrollPane.getViewport().setViewPosition( p );
+		scrollPane.getViewport().setViewPosition(scrollPoint);
 		
 		btnGrid = new JLabel[gridRows][gridCols];
 		for(int r = 0; r < gridRows; r++){
@@ -743,7 +743,7 @@ public class GridEditorGui extends JFrame {
 					if(newFrameNumber < frames.size()){
 						currentFrame = newFrameNumber;
 						// Save the current position
-						p = scrollPane.getViewport().getViewPosition();
+						scrollPoint = scrollPane.getViewport().getViewPosition();
 						initGrid();
 						createNodeButtonEventHandlers();	
 					}
@@ -784,15 +784,6 @@ public class GridEditorGui extends JFrame {
 	    });
 	    popup.add(menuItem);
 	    
-	    menuItem=new JMenuItem("Insert Duplicate Frame After");
-	    menuItem.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				addFrame(popup.getFrameNumber(), true, FRAME_AFTER);
-			}
-	    });
-	    popup.add(menuItem);
-	    
 	    menuItem=new JMenuItem("Insert Blank Frame Before");
 	    menuItem.addActionListener(new ActionListener(){
 			@Override
@@ -802,11 +793,11 @@ public class GridEditorGui extends JFrame {
 	    });    
 	    popup.add(menuItem);
 	    
-	    menuItem=new JMenuItem("Insert Duplicate Frame Before");
+	    menuItem=new JMenuItem("Duplicate Frame");
 	    menuItem.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				addFrame(popup.getFrameNumber(), true, FRAME_BEFORE);
+				addFrame(popup.getFrameNumber(), true, FRAME_AFTER);
 			}
 	    });
 	    popup.add(menuItem);
@@ -844,6 +835,7 @@ public class GridEditorGui extends JFrame {
 			}
 		}
 		
+		
 		//calculates starting time and adds frame to appropriate location
 		if(frameLoc==FRAME_END){
 			previousStartingTime = frames.get(frames.size()-1).getStartingTime();
@@ -872,15 +864,18 @@ public class GridEditorGui extends JFrame {
 			}
 			frames.add(frameNum+1, tempFrame);
 			currentFrame = frameNum+1;
+			
+		}
+		//calculates scroll bar position: if Frame added at end, scroll to max, else keep current position
+		JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
+		if(frameLoc==FRAME_END||(frameLoc==FRAME_AFTER&&frameNum==frames.size()-2)){
+			scrollPoint = new Point(horizontal.getMaximum(), 0);
+		}
+		else{
+			scrollPoint = new Point(horizontal.getValue(), 0);
 		}
 		//sets new Frame's starting time				
-		tempFrame.setStartingTime(previousStartingTime + frameDuration);
-		
-		
-		
-		// Save the End Position of the scroll Pane
-		JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
-		p = new Point(horizontal.getMaximum(), 0);
+		tempFrame.setStartingTime(previousStartingTime + frameDuration);	
 		
 		initGrid();
 		createNodeButtonEventHandlers();
