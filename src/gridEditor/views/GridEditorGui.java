@@ -145,8 +145,6 @@ public class GridEditorGui extends JFrame {
 		openFileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("TAN files", "tan"));
 		
-		initGrid();
-		
 		createFrameRightClickMenu();
 				
 		JMenuBar menuBar = new JMenuBar();
@@ -272,6 +270,7 @@ public class GridEditorGui extends JFrame {
 
 		//TODO: add the "-" button to remove frames as well
 		}
+		initGrid();
 		
 	}
 	
