@@ -827,19 +827,11 @@ public class GridEditorGui extends JFrame {
 		// and put it in the frames array list (add a new frame to out current list of frames)
 		Frame tempFrame = new Frame(gridRows, gridCols);
 		int previousStartingTime;
-		if(frameLoc==FRAME_END){
-			previousStartingTime = frames.get(frames.size()-1).getStartingTime();
-		}
-		else if(frameLoc==FRAME_BEFORE){
-			previousStartingTime=frames.get(frameNum-1).getStartingTime();
-		}
-		else{
-			previousStartingTime=frames.get(frameNum).getStartingTime();
-		}
-		tempFrame.setStartingTime(previousStartingTime + defaultFrameDuration);
+		int frameDuration=defaultFrameDuration;
+		
 		if(copy){
-			Node[][] tempNodeArr = new Node[gridRows][gridCols];
-				
+			//copies frame duration
+			frameDuration = getFrameDuration(frameNum);
 			for(int j=0; j<gridRows; j++)
 			{
 				for(int k=0; k<gridCols; k++) 
@@ -847,21 +839,44 @@ public class GridEditorGui extends JFrame {
 					//get color value
 					Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
 					//assign color to current node
-					Node tempNode = new Node();
-					tempNode.setColor(tempColor);
-					tempNodeArr[j][k] = tempNode;
+					tempFrame.setNodeColor(j, k, tempColor);
 				}
-				tempFrame.setNodeGrid(tempNodeArr);		
 			}
 		}
 		
-		// add node to the Frame
-						
-	
-		// Add this copied frame to our list of frames
-		frames.add(tempFrame);
+		//calculates starting time and adds frame to appropriate location
+		if(frameLoc==FRAME_END){
+			previousStartingTime = frames.get(frames.size()-1).getStartingTime();
+			frames.add(tempFrame);
+			currentFrame = frames.size()-1;
+		}
+		else if(frameLoc==FRAME_BEFORE){
+			previousStartingTime=frames.get(frameNum).getStartingTime();
+			//shifts subsequent Frames' starting times
+			for(int x=frameNum; x<frames.size();x++){
+				frames.get(x).increaseStartingTime(frameDuration);
+			}
+			frames.add(frameNum, tempFrame);
+			currentFrame = frameNum;
+		}
+		else{
+			if(frameNum<frames.size()-1){
+				previousStartingTime=frames.get(frameNum+1).getStartingTime();
+			}
+			else{
+				previousStartingTime=frames.get(frameNum).getStartingTime()+getFrameDuration(frameNum);
+			}
+			//shifts subsequent Frames' starting times
+			for(int x=frameNum+1; x<frames.size();x++){
+				frames.get(x).increaseStartingTime(frameDuration);
+			}
+			frames.add(frameNum+1, tempFrame);
+			currentFrame = frameNum+1;
+		}
+		//sets new Frame's starting time				
+		tempFrame.setStartingTime(previousStartingTime + frameDuration);
 		
-		currentFrame = frames.size()-1;
+		
 		
 		// Save the End Position of the scroll Pane
 		JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
