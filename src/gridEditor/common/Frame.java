@@ -45,6 +45,9 @@ public class Frame {
 	public void setStartingTime(int newVal){
 		startingTime=newVal;
 	}
+	public void increaseStartingTime(int toAdd){
+		startingTime+=toAdd;
+	}
 	public int getDuration(){
 		return duration;
 	}

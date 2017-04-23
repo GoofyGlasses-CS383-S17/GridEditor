@@ -114,6 +114,10 @@ public class GridEditorGui extends JFrame {
 	// and initializing components
 	/////////////////////////////////////////////////////
 	private void initComponents() {
+		if(frames==null){
+			frames=new ArrayList<Frame>();
+			frames.add(new Frame(gridRows, gridCols));
+		}
 		if(currentFile == null){
 			setTitle("GoofyGlasses Editor");
 		}
@@ -191,12 +195,6 @@ public class GridEditorGui extends JFrame {
 		mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
 		
-		if(frames==null){
-			frames=new ArrayList<Frame>();
-			frames.add(new Frame(gridRows, gridCols));
-			
-			
-			
 			
 			
 		
@@ -276,7 +274,6 @@ public class GridEditorGui extends JFrame {
 		//TODO: add the "-" button to remove frames as well
 		
 		
-		}
 	}
 	
 	private void createPlayEventHandler(Component playButton){
@@ -826,7 +823,52 @@ public class GridEditorGui extends JFrame {
 	
 	//this method handles all creation of new frames
 	void addFrame(int frameNum, boolean copy, int frameLoc){
-		//TODO: Implement this method and have current Add Frame button call this
+		// Acts very similar to the ReadFile.java class, need to get copy of current frame
+		// and put it in the frames array list (add a new frame to out current list of frames)
+		Frame tempFrame = new Frame(gridRows, gridCols);
+		int previousStartingTime;
+		if(frameLoc==FRAME_END){
+			previousStartingTime = frames.get(frames.size()-1).getStartingTime();
+		}
+		else if(frameLoc==FRAME_BEFORE){
+			previousStartingTime=frames.get(frameNum-1).getStartingTime();
+		}
+		else{
+			previousStartingTime=frames.get(frameNum).getStartingTime();
+		}
+		tempFrame.setStartingTime(previousStartingTime + defaultFrameDuration);
+		if(copy){
+			Node[][] tempNodeArr = new Node[gridRows][gridCols];
+				
+			for(int j=0; j<gridRows; j++)
+			{
+				for(int k=0; k<gridCols; k++) 
+				{
+					//get color value
+					Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
+					//assign color to current node
+					Node tempNode = new Node();
+					tempNode.setColor(tempColor);
+					tempNodeArr[j][k] = tempNode;
+				}
+				tempFrame.setNodeGrid(tempNodeArr);		
+			}
+		}
+		
+		// add node to the Frame
+						
+	
+		// Add this copied frame to our list of frames
+		frames.add(tempFrame);
+		
+		currentFrame = frames.size()-1;
+		
+		// Save the End Position of the scroll Pane
+		JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
+		p = new Point(horizontal.getMaximum(), 0);
+		
+		initGrid();
+		createNodeButtonEventHandlers();
 	}
 	
 	//this method handles deletion of a frame
@@ -842,40 +884,7 @@ public class GridEditorGui extends JFrame {
 		addFrameButton.addMouseListener(new FrameButtonActionListener(-1){
 			@Override
 			public void mouseClicked(MouseEvent arg1) {
-				
-				// Acts very similar to the ReadFile.java class, need to get copy of current frame
-				// and put it in the frames array list (add a new frame to out current list of frames)
-				Frame tempFrame = new Frame();
-				int previousStartingTime = frames.get(frames.size()-1).getStartingTime();
-				tempFrame.setStartingTime(previousStartingTime + defaultFrameDuration);
-				Node[][] tempNodeArr = new Node[gridRows][gridCols];
-					
-				for(int j=0; j<gridRows; j++)
-				{
-					for(int k=0; k<gridCols; k++) 
-					{
-						//get color value
-						Color tempColor = frames.get(currentFrame).getNodeColor(j, k);
-						//assign color to current node
-						Node tempNode = new Node();
-						tempNode.setColor(tempColor);
-						tempNodeArr[j][k] = tempNode;
-					}
-				}
-				// add node to the Frame
-				tempFrame.setNodeGrid(tempNodeArr);						
-			
-				// Add this copied frame to our list of frames
-				frames.add(tempFrame);
-				
-				currentFrame = frames.size()-1;
-				
-				// Save the End Position of the scroll Pane
-				JScrollBar horizontal = scrollPane.getHorizontalScrollBar();
-				p = new Point(horizontal.getMaximum(), 0);
-				
-				initGrid();
-				createNodeButtonEventHandlers();
+				addFrame(currentFrame, false, FRAME_END);
 			}
 		});
 	}
