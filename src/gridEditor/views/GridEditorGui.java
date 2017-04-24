@@ -56,6 +56,7 @@ public class GridEditorGui extends JFrame {
 	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
 	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
 	private JMenuItem mntmAbout;
+	private JButton addFrame;
 	private JButton shiftUp; 
 	private JButton shiftDown;
 	private JButton shiftLeft;
@@ -210,6 +211,7 @@ public class GridEditorGui extends JFrame {
 			}catch (Exception ex) {
 				System.out.println(ex);
 			}
+			shiftUp.setToolTipText("shift all nodes one node up");
 			buttonPanel.add(shiftUp);
 					
 					
@@ -222,6 +224,7 @@ public class GridEditorGui extends JFrame {
 			}catch (Exception ex) {
 				System.out.println(ex);
 			}  
+			shiftDown.setToolTipText("shift all nodes one node down");
 			buttonPanel.add(shiftDown);
 			
 			// Add directional left button
@@ -233,6 +236,7 @@ public class GridEditorGui extends JFrame {
 			}catch (Exception ex) {
 				System.out.println(ex);
 			}
+			shiftLeft.setToolTipText("shift all nodes one node left");
 			buttonPanel.add(shiftLeft);
 					
 					
@@ -245,6 +249,7 @@ public class GridEditorGui extends JFrame {
 			}catch (Exception ex) {
 				System.out.println(ex);
 			}  
+			shiftRight.setToolTipText("shift all nodes one node right");
 			buttonPanel.add(shiftRight);
 			
 			gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
@@ -277,7 +282,9 @@ public class GridEditorGui extends JFrame {
 			// Add a "+" Button to add a frame (Added here as button should never move or change)
 			frameActionPanel = new JPanel();
 			frameEditPanel.add(frameActionPanel);
-			frameActionPanel.add(new JButton("Add Frame (+)"));
+			addFrame = new JButton("Add Frame (+)");
+			addFrame.setToolTipText("add blank frame to end of show");
+			frameActionPanel.add(addFrame);
 			frameActionPanel.add(new JButton("Play"));
 			frameActionPanel.add(new JButton("Stop"));
 			frameActionPanel.add(new JButton("Pause"));
@@ -405,7 +412,7 @@ public class GridEditorGui extends JFrame {
 								validInput = true;
 							}
 						}
-						if (result == JOptionPane.CANCEL_OPTION) {
+						if (result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION) {
 							break;
 						}
 					} while(!validInput);
@@ -437,15 +444,10 @@ public class GridEditorGui extends JFrame {
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
-						frames = null;
-						ArrayList<Frame> temp=new ArrayList<Frame>();
-						temp = TanFile.readFile(tanFile);
-						if(temp.size()==0){
+						frames = TanFile.readFile(tanFile);
+						if(frames.size()==0){
 							return;
 						}
-						//Re-initialize grid based off of values from file
-						frames=temp;
-						//System.out.println(temp.get(0).getNodeColor(1, 1));
 						
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
