@@ -64,6 +64,7 @@ public class GridEditorGui extends JFrame {
 	//private ColorPicker colorPicker;
 	private String currentFile; //stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
+	private ArrayList<Frame> savedFrames;
 	private int currentFrame=0;
 	private JPanel gridConfigurePanel;
 	private JPanel previewPanel;
@@ -194,8 +195,12 @@ public class GridEditorGui extends JFrame {
 		if(frames==null){
 			frames=new ArrayList<Frame>();
 			frames.add(new Frame(gridRows, gridCols));
-		
-		
+			//clone frames to catch changes on exit
+			savedFrames = new ArrayList<Frame>();
+			for (int i=0; i<frames.size(); i++) {
+				savedFrames.add((frames.get(i)).clone());
+			}
+
 			// Add direction buttons Panel to right of Grid Panel
 			contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 			buttonPanel = new JPanel();
@@ -405,7 +410,7 @@ public class GridEditorGui extends JFrame {
 								validInput = true;
 							}
 						}
-						if (result == JOptionPane.CANCEL_OPTION) {
+						if (result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION) {
 							break;
 						}
 					} while(!validInput);
@@ -437,15 +442,15 @@ public class GridEditorGui extends JFrame {
 						//System.out.println("Selected File: " + currentFile);
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
-						frames = null;
-						ArrayList<Frame> temp=new ArrayList<Frame>();
-						temp = TanFile.readFile(tanFile);
-						if(temp.size()==0){
+						frames = TanFile.readFile(tanFile);
+						if(frames.size()==0){
 							return;
 						}
-						//Re-initialize grid based off of values from file
-						frames=temp;
-						//System.out.println(temp.get(0).getNodeColor(1, 1));
+						//clone frames to catch changes on exit
+						savedFrames = new ArrayList<Frame>();
+						for (int i=0; i<frames.size(); i++) {
+							savedFrames.add((frames.get(i)).clone());
+						}
 						
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
@@ -502,7 +507,37 @@ public class GridEditorGui extends JFrame {
 		mntmExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-		// TODO Check if current file is "saved" before exit		
+				// TODO Check if current file is "saved" before exit	
+				if(frameChanged()) {
+					//TODO ask user if they want to change
+					int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_OPTION);
+					if(result == JOptionPane.YES_OPTION) {
+						if(currentFile != null) {
+							//call save
+							try {
+								File tanSaveFile = openFileChooser.getSelectedFile();
+								if(!tanSaveFile.getName().endsWith(".tan")) {
+									String path = tanSaveFile.getAbsolutePath() + ".tan";
+									setTitle("GoofyGlasses Editor " + path);
+									File newSaveFile = new File(path);
+									TanFile.writeFile(newSaveFile, frames);
+								}
+								else {
+									TanFile.writeFile(tanSaveFile, frames);
+									currentFile = tanSaveFile.getAbsolutePath();
+									setTitle("GoofyGlasses Editor " + currentFile);
+								}
+							}
+							catch(Exception e1) {
+								saveAsDialog(mntmSaveAs);
+							}
+						}
+						else {
+							//call saveAs
+							saveAsDialog(mntmSaveAs);
+						}
+					}
+				}
 				System.exit(0);
 			}
 		});
@@ -639,6 +674,27 @@ public class GridEditorGui extends JFrame {
 		//node buttons
 		createNodeButtonEventHandlers();
 	
+	}
+	
+	/////////////////////////////////////////////////////
+	// Method for detecting if frames have change since 
+	// previous save
+	/////////////////////////////////////////////////////
+	private boolean frameChanged() {
+		if (savedFrames.size() != frames.size()) {
+			return true;
+		}
+		for(int i=0; i<savedFrames.size(); i++) {
+//			Frame one = frames.get(i);
+//			Frame two = savedFrames.get(i);
+//			if (!one.equals(two)) {
+//				return true;
+//			}
+			if(!((frames.get(i)).equals(savedFrames.get(i)))) {
+				return true;
+			}
+		}
+		return false;
 	}
 	/////////////////////////////////////////////////////
 	// Method for SaveAs and Save
