@@ -983,20 +983,21 @@ public class GridEditorGui extends JFrame {
 	// button and sets its color
 	/////////////////////////////////////////////////////
 	private void createNodeButton(int row, int column){
-			btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
-			btnGrid[row][column].setHorizontalAlignment(SwingConstants.CENTER);
-			btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		//btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
+		btnGrid[row][column] = new JLabel();
+		btnGrid[row][column].setHorizontalAlignment(SwingConstants.CENTER);
+		btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			
-			/* Supposedly setPreferredSize is bad practice, and this seems to not do anything anyways
-			 * looking at another solution(SethF) 
-			 * This is connected to the GridLayout issue @line ~295 (SethF)
-			 */ 
-//			btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
-			
-			if(frames != null){
-				Color nodeColor = frames.get(currentFrame).getNodeColor(row, column);
-				btnGrid[row][column].setOpaque(true);
-				btnGrid[row][column].setBackground(nodeColor);
-			}
+		/* Supposedly setPreferredSize is bad practice, and this seems to not do anything anyways
+		 * looking at another solution(SethF) 
+		 * This is connected to the GridLayout issue @line ~295 (SethF)
+		 */ 
+//		btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
+		
+		if(frames != null){
+			Color nodeColor = frames.get(currentFrame).getNodeColor(row, column);
+			btnGrid[row][column].setOpaque(true);
+			btnGrid[row][column].setBackground(nodeColor);
 		}
+	}	
 }
