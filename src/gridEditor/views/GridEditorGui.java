@@ -768,6 +768,13 @@ public class GridEditorGui extends JFrame {
 					
 					//previewPanel[newFrameNumber].setBackground(black);
 				}
+				@Override
+				public void mousePressed(MouseEvent e){
+					if(e.isPopupTrigger()){
+						popup.show(e.getComponent(), e.getX(), e.getY());
+						popup.setFrameNumber(this.getFrameNumber());
+					}
+				}
 				
 				@Override
 				public void mouseReleased(MouseEvent e){
