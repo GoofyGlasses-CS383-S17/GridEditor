@@ -958,7 +958,11 @@ public class GridEditorGui extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
 						if(arg0.isShiftDown()&&lastPressedRow>-1){
-							fillNodes(colorChooser.getColor(), this.getRow(), this.getCol());
+							int maxRow=this.getRow()>lastPressedRow ? this.getRow() : lastPressedRow;
+							int minRow=this.getRow()<lastPressedRow ? this.getRow() : lastPressedRow;
+							int maxCol=this.getCol()>lastPressedCol ? this.getCol() : lastPressedCol;
+							int minCol=this.getCol()<lastPressedCol ? this.getCol() : lastPressedCol;
+							fillNodes(colorChooser.getColor(), minRow, minCol, maxRow, maxCol);
 						}
 						else{
 							color = colorChooser.getColor();
@@ -992,12 +996,9 @@ public class GridEditorGui extends JFrame {
 		}
 	}
 	
+	//TODO: Call this method to set background color
 	//this method fills nodes that were shift selected
-	private void fillNodes(Color color, int currRow, int currCol){
-		int maxRow=currRow>lastPressedRow ? currRow : lastPressedRow;
-		int minRow=currRow<lastPressedRow ? currRow : lastPressedRow;
-		int maxCol=currCol>lastPressedCol ? currCol : lastPressedCol;
-		int minCol=currCol<lastPressedCol ? currCol : lastPressedCol;
+	private void fillNodes(Color color, int minRow, int minCol, int maxRow, int maxCol){
 		for(int i=minRow;i<=maxRow;i++){
 			for(int j=minCol;j<=maxCol;j++){
 				color = colorChooser.getColor();
