@@ -54,7 +54,7 @@ public class WriteFile {
 			oneFrame = grid.get(i);
 			oneNode = oneFrame.getNodeGrid();
 			//line for start time
-			writer.write(Integer.toString(oneFrame.getDuration()));
+			writer.write(Integer.toString(oneFrame.getStartingTime()));
 			writer.newLine();
 			//loop for writing Frame
 			for(int j = 0; j<rows; j++) {
