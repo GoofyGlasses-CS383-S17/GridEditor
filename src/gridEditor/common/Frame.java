@@ -10,9 +10,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 public class Frame {
+	static public int defaultFrameDuration = 100;
+	
 	//these variables should only be accessed via methods
 	private Node[][] nodes;
-	private int startingTime, duration;
+	private int startingTime;
 	public Frame(){
 		
 	}
@@ -27,8 +29,7 @@ public class Frame {
 	//copy constructor
 	public Frame(Frame old){
 		nodes=old.getNodeGrid();
-		duration=old.getDuration();
-		startingTime=old.getStartingTime()+duration;
+		startingTime=old.getStartingTime() + defaultFrameDuration;
 	}
 	public Frame(Node[][] nodes){
 		this.nodes=nodes;
@@ -47,12 +48,6 @@ public class Frame {
 	}
 	public void adjustStartingTime(int toAdd){
 		startingTime+=toAdd;
-	}
-	public int getDuration(){
-		return duration;
-	}
-	public void setDuration(int newVal){
-		duration=newVal;
 	}
 	public Color getNodeColor(int row, int col){
 		return nodes[row][col].getColor();

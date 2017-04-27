@@ -11,6 +11,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -61,7 +64,11 @@ public class GridEditorGui extends JFrame {
 	private JButton shiftDown;
 	private JButton shiftLeft;
 	private JButton shiftRight;
-	private JColorChooser colorChooser;	
+	private JColorChooser colorChooser;
+	private JTextField durationField;
+	private JTextField startTimeField;
+	private JLabel durationLabel;
+	private JLabel startTimeLabel;
 	//private ColorPicker colorPicker;
 	private String currentFile; //stores currently opened file for saving purposes
 	private ArrayList<Frame> frames;
@@ -77,7 +84,6 @@ public class GridEditorGui extends JFrame {
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
-	private int defaultFrameDuration = 100;
 
 	/**
 	 * Launch the application.
@@ -252,6 +258,8 @@ public class GridEditorGui extends JFrame {
 			shiftRight.setToolTipText("shift all nodes one node right");
 			buttonPanel.add(shiftRight);
 			
+			AddTimeEditingGUI(gridConfigurePanel);
+			
 			gridConfigurePanel.add(buttonPanel,BorderLayout.NORTH);
 			colorPanel = new JPanel();
 			colorChooser = new JColorChooser();
@@ -276,7 +284,7 @@ public class GridEditorGui extends JFrame {
 			colorPanel.add(colorChooser,BorderLayout.CENTER);
 			gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
 			
-			// Add Frame Edit Panel
+						// Add Frame Edit Panel
 			contentPane.add(frameEditPanel, BorderLayout.NORTH);
 			
 			// Add a "+" Button to add a frame (Added here as button should never move or change)
@@ -297,6 +305,126 @@ public class GridEditorGui extends JFrame {
 		}
 		initGrid();
 		
+	}
+	
+	private void AddTimeEditingGUI(JPanel gridConfigurePanel){
+		JPanel timePanel = new JPanel();
+		durationLabel = new JLabel("Duration (ms): ");
+		startTimeLabel = new JLabel("Start time (ms): ");
+		durationField  = new JTextField(6);
+		startTimeField  = new JTextField(6);
+		
+		timePanel.add(durationLabel);
+		timePanel.add(durationField);
+		timePanel.add(startTimeLabel);
+		timePanel.add(startTimeField);	
+		
+		AddDurationFieldListener();
+		AddStartTimeFieldListener();
+		
+		gridConfigurePanel.add(timePanel, BorderLayout.SOUTH);
+	}
+	
+	private void AddDurationFieldListener(){
+		durationField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				UpdateDuration();
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				UpdateDuration();
+
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+	}
+	
+	private void AddStartTimeFieldListener(){
+		startTimeField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				UpdateStartTime();
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				UpdateStartTime();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+	}
+	
+	private void UpdateStartTime(){
+		boolean validInput = EnsureStringIsInt(startTimeField);
+
+		if(validInput == true){
+			int newStartTime = newStartTime = Integer.parseInt(startTimeField.getText());
+			
+			int previousStartTime = -1;
+			int nextStartTime = 0;
+			if(currentFrame != 0){
+				previousStartTime = frames.get(currentFrame-1).getStartingTime();
+			}
+			if(currentFrame != frames.size()-1){
+				nextStartTime = frames.get(currentFrame+1).getStartingTime();
+			}
+			
+			if((newStartTime >= nextStartTime && currentFrame != frames.size()-1) || newStartTime <= previousStartTime ||
+					(currentFrame == 0 && newStartTime != 0)){
+				startTimeLabel.setForeground(Color.RED);
+				return;
+			}
+			
+			frames.get(currentFrame).setStartingTime(newStartTime);
+			int newDuration = getFrameDuration(currentFrame);
+			durationField.setText(Integer.toString(newDuration));
+			startTimeLabel.setForeground(Color.BLACK);
+		}
+		else{
+			startTimeLabel.setForeground(Color.RED);
+		}
+	}
+	
+	private void UpdateDuration(){
+		boolean validInput = EnsureStringIsInt(durationField);
+		
+		if(validInput == true){
+			int newDuration = Integer.parseInt(durationField.getText());
+			
+			if(currentFrame != frames.size()-1){
+				// Update subsequence frames
+				int nextStartTime = frames.get(currentFrame+1).getStartingTime();
+				int currentStartTime = frames.get(currentFrame).getStartingTime();
+				int oldDuration = nextStartTime - currentStartTime;
+				int durationDiff = newDuration - oldDuration;
+				for(int i=currentFrame+1; i<frames.size(); i++){
+					int oldStartTime = frames.get(i).getStartingTime();
+					frames.get(i).setStartingTime(oldStartTime + durationDiff);
+				}
+			}
+
+			durationLabel.setForeground(Color.BLACK);
+		}
+		else{
+			durationLabel.setForeground(Color.RED);
+		}
+	}
+	
+	private boolean EnsureStringIsInt(JTextField textField){
+		try{
+			int value = Integer.parseInt(textField.getText());
+			if(value < 0){
+				return false;
+			}
+		}
+		catch(NumberFormatException e){
+			return false;
+		}
+		return true;
 	}
 	
 	private void createPlayEventHandler(Component playButton){
@@ -342,8 +470,8 @@ public class GridEditorGui extends JFrame {
 	}
 	
 	private int getFrameDuration(int frameNumber){
-		// Default nextStartTime to 1 second beyond the last frame
-		int nextStartTime = frames.get(frames.size()-1).getStartingTime() + 1000;
+		// Default nextStartTime to the the default duration milliseconds beyond the last frame
+		int nextStartTime = frames.get(frames.size()-1).getStartingTime() + Frame.defaultFrameDuration;
 		if(frameNumber < frames.size()-1){
 			nextStartTime = frames.get(frameNumber+1).getStartingTime();
 		}
@@ -742,11 +870,24 @@ public class GridEditorGui extends JFrame {
 			}
 		}
 		
+		SetTimeFields();
+		
 		contentPane.revalidate();
 		//TODO: repainting is probably not the best solution. Improve if/when possible
 		contentPane.repaint();
 	}
 
+	private void SetTimeFields(){
+		int startingTime = frames.get(currentFrame).getStartingTime();
+		int nextStartingTime = startingTime + Frame.defaultFrameDuration;
+		if(currentFrame != frames.size()-1){
+			nextStartingTime = frames.get(currentFrame+1).getStartingTime();
+		}
+		int duration = nextStartingTime - startingTime;
+		startTimeField.setText(Integer.toString(startingTime)); 
+		durationField.setText(Integer.toString(duration));
+	}
+	
 	/////////////////////////////////////////////////////
 	// This method creates the event handlers for the 
 	// frame buttons
@@ -843,7 +984,7 @@ public class GridEditorGui extends JFrame {
 		// and put it in the frames array list (add a new frame to out current list of frames)
 		Frame tempFrame = new Frame(gridRows, gridCols);
 		int previousStartingTime;
-		int frameDuration=defaultFrameDuration;
+		int frameDuration=Frame.defaultFrameDuration;
 		
 		if(copy){
 			//copies frame duration

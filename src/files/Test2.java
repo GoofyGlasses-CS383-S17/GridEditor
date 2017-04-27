@@ -94,7 +94,6 @@ public class Test2 {
 		for(int z = 0; z < rows*cols; z++)
 		{
 			test = new Frame();
-			test.setDuration(z);
 			test.setNodeGrid(color_matrix);
 			testList.add(test);
 		}

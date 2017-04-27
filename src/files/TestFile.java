@@ -35,7 +35,6 @@ public class TestFile {
 		
 		for(int z=0; z<2; z++) {
 			test = new Frame();
-			test.setDuration(z);
 			test.setNodeGrid(multiNode);
 			testList.add(test);
 		}
