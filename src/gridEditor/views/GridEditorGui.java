@@ -78,7 +78,7 @@ public class GridEditorGui extends JFrame {
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
 	private int defaultFrameDuration = 100;
-
+	private int lastPressedRow=-1, lastPressedCol=-1;
 	/**
 	 * Launch the application.
 	 */
@@ -957,16 +957,21 @@ public class GridEditorGui extends JFrame {
 
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						
+						if(arg0.isShiftDown()&&lastPressedRow>-1){
+							fillNodes(colorChooser.getColor(), this.getRow(), this.getCol());
+						}
+						else{
 							color = colorChooser.getColor();
 							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
-							//btnGrid[this.getRow()][this.getCol()].setContentAreaFilled(false);
 							btnGrid[this.getRow()][this.getCol()].setBackground(color);
 							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), color);
 							// redraw the grid
 							initGrid();
 							createNodeButtonEventHandlers();
-					     }
+						}
+						lastPressedRow=this.getRow();
+						lastPressedCol=this.getCol();
+				     }
 						
 					
 					@Override
@@ -985,6 +990,25 @@ public class GridEditorGui extends JFrame {
 			
 			}
 		}
+	}
+	
+	//this method fills nodes that were shift selected
+	private void fillNodes(Color color, int currRow, int currCol){
+		int maxRow=currRow>lastPressedRow ? currRow : lastPressedRow;
+		int minRow=currRow<lastPressedRow ? currRow : lastPressedRow;
+		int maxCol=currCol>lastPressedCol ? currCol : lastPressedCol;
+		int minCol=currCol<lastPressedCol ? currCol : lastPressedCol;
+		for(int i=minRow;i<=maxRow;i++){
+			for(int j=minCol;j<=maxCol;j++){
+				color = colorChooser.getColor();
+				btnGrid[i][j].setOpaque(true);
+				btnGrid[i][j].setBackground(color);
+				frames.get(currentFrame).setNodeColor(i, j, color);
+				
+			}
+		}
+		initGrid();
+		createNodeButtonEventHandlers();
 	}
 
 	/////////////////////////////////////////////////////
