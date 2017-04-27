@@ -294,7 +294,6 @@ public class GridEditorGui extends JFrame {
 			createStopEventHandler(frameActionPanel.getComponent(2));
 			createPauseEventHandler(frameActionPanel.getComponent(3));
 
-		//TODO: add the "-" button to remove frames as well
 		}
 		initGrid();
 		
