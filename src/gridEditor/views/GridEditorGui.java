@@ -134,7 +134,7 @@ public class GridEditorGui extends JFrame {
 			setTitle("GoofyGlasses Editor " + currentFile);
 		}
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
 		setBounds(100, 100, 1000, 800);
@@ -878,7 +878,7 @@ public class GridEditorGui extends JFrame {
 	private void grid_windowClosing(WindowEvent e) {
 			if(frameChanged()) {
 				//ask user if they want to save before exit
-				int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION);
 				if(result == JOptionPane.YES_OPTION) {
 					// check for file name, otherwise open save as dialog
 					if(currentFile != null) {
@@ -904,8 +904,14 @@ public class GridEditorGui extends JFrame {
 						saveAsDialog(mntmSaveAs);
 					}
 				}
+				else if(result == JOptionPane.CANCEL_OPTION) {
+					return;
+				}
+				else if(result == JOptionPane.NO_OPTION){
+					System.exit(0);
+				}
 			}
-			System.exit(0);
+			
 	};
 	/////////////////////////////////////////////////////
 	// Method checks for frame differences since last save
