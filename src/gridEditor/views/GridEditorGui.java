@@ -322,7 +322,7 @@ public class GridEditorGui extends JFrame {
 			createPlayEventHandler(frameActionPanel.getComponent(0));
 			createStopEventHandler(frameActionPanel.getComponent(1));
 			createPauseEventHandler(frameActionPanel.getComponent(2));
-
+			
 		}
 		initGrid();
 		
