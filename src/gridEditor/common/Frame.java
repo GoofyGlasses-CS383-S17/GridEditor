@@ -34,6 +34,32 @@ public class Frame {
 	public Frame(Node[][] nodes){
 		this.nodes=nodes;
 	}
+	public Frame clone(){
+		Node[][] clonedNode = new Node[getWidth()][getHeight()];
+		Frame clonedFrame = new Frame();
+		for(int i=0; i<getWidth(); i++) {
+			for(int j=0; j<getHeight(); j++) {
+				clonedNode[i][j] = nodes[i][j];
+			}
+		}
+		clonedFrame.nodes = clonedNode;
+		clonedFrame.startingTime = startingTime;
+		return clonedFrame;
+	}
+	public boolean equal(Frame savedFrame) {
+		if(startingTime != savedFrame.getStartingTime()) {
+			return false;
+		}
+		Node[][] savedNodes = savedFrame.nodes;
+		for(int i=0; i<getWidth(); i++) {
+			for(int j=0; j<getHeight(); j++) {
+				if(!(nodes[i][j].equals(savedNodes[i][j]))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 	public int getWidth(){
 		return nodes[0].length;
 	}

@@ -29,6 +29,7 @@ import files.WriteFile;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
@@ -72,6 +73,7 @@ public class GridEditorGui extends JFrame {
 	private JLabel startTimeLabel;
 	//private ColorPicker colorPicker;
 	private String currentFile; //stores currently opened file for saving purposes
+	private ArrayList<Frame> savedFrames;
 	private ArrayList<Frame> frames;
 	private int currentFrame=0;
 	private JPanel gridConfigurePanel;
@@ -204,7 +206,12 @@ public class GridEditorGui extends JFrame {
 		if(frames==null){
 			frames=new ArrayList<Frame>();
 			frames.add(new Frame(gridRows, gridCols));
-		
+			
+			//clone frames to catch changes on exit
+			savedFrames = new ArrayList<Frame>();
+			for (int i=0; i<frames.size(); i++) {
+				savedFrames.add((frames.get(i)).clone());
+			}
 		
 			// Add direction buttons Panel to right of Grid Panel
 			contentPane.add(gridConfigurePanel, BorderLayout.EAST);
@@ -324,6 +331,12 @@ public class GridEditorGui extends JFrame {
 			createPauseEventHandler(frameActionPanel.getComponent(2));
 			
 		}
+		// Listener for close on x without saving
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				grid_windowClosing(e);
+			}
+		});
 		initGrid();
 		
 	}
@@ -652,8 +665,9 @@ public class GridEditorGui extends JFrame {
 		mntmExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-		// TODO Check if current file is "saved" before exit		
-				System.exit(0);
+				// Check if current file is "saved" before exit
+				WindowEvent e1 = new WindowEvent(null, 0);
+				grid_windowClosing(e1);
 			}
 		});
 		
@@ -826,7 +840,7 @@ public class GridEditorGui extends JFrame {
 		
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 			File tanSaveFile = openFileChooser.getSelectedFile();
-			// check for tan extension
+			// if statement checks for tan extension
 			if(!tanSaveFile.getName().endsWith(".tan")) {
 				String path = tanSaveFile.getAbsolutePath() + ".tan";
 				currentFile = path;
@@ -858,7 +872,57 @@ public class GridEditorGui extends JFrame {
 		}
 		return validity;
 	}
-
+	/////////////////////////////////////////////////////
+	// Method to check if frames have changed prior to 
+	// last save before closing.
+	/////////////////////////////////////////////////////
+	private void grid_windowClosing(WindowEvent e) {
+			if(frameChanged()) {
+				//ask user if they want to save before exit
+				int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_OPTION);
+				if(result == JOptionPane.YES_OPTION) {
+					// check for file name, otherwise open save as dialog
+					if(currentFile != null) {
+						try {
+							File tanSaveFile = openFileChooser.getSelectedFile();
+							if(!tanSaveFile.getName().endsWith(".tan")) {
+								String path = tanSaveFile.getAbsolutePath() + ".tan";
+								setTitle("GoofyGlasses Editor " + path);
+								File newSaveFile = new File(path);
+								TanFile.writeFile(newSaveFile, frames);
+							}
+							else {
+								TanFile.writeFile(tanSaveFile, frames);
+								currentFile = tanSaveFile.getAbsolutePath();
+								setTitle("GoofyGlasses Editor " + currentFile);
+							}
+						}
+						catch(Exception e1) {
+							saveAsDialog(mntmSaveAs);
+						}
+					}
+					else {
+						saveAsDialog(mntmSaveAs);
+					}
+				}
+			}
+			System.exit(0);
+	};
+	/////////////////////////////////////////////////////
+	// Method checks for frame differences since last save
+	/////////////////////////////////////////////////////
+	private boolean frameChanged() {
+		if (savedFrames.size() != frames.size()) {
+			return true;
+		}
+		for (int i = 0; i < savedFrames.size(); i++) {
+			if (!((frames.get(i)).equals(savedFrames.get(i)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/////////////////////////////////////////////////////
 	// This method will be used to initialize the grid
 	// Called at the start, and when a file is opened
