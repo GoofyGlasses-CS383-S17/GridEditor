@@ -64,6 +64,7 @@ public class GridEditorGui extends JFrame {
 	private JButton shiftDown;
 	private JButton shiftLeft;
 	private JButton shiftRight;
+	private JButton fillGrid;
 	private JColorChooser colorChooser;
 	private JTextField durationField;
 	private JTextField startTimeField;
@@ -208,7 +209,13 @@ public class GridEditorGui extends JFrame {
 			// Add direction buttons Panel to right of Grid Panel
 			contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 			buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridLayout(2,2));
+			buttonPanel.setLayout(new GridLayout(2,3));
+			buttonPanel.setPreferredSize(new Dimension(60,60));
+			
+			// Add addFrame button
+			addFrame = new JButton("Add Frame (+)");
+			addFrame.setToolTipText("add blank frame to end of show");
+			buttonPanel.add(addFrame);
 			
 			// Add directional up button
 			shiftUp = new JButton();
@@ -222,7 +229,24 @@ public class GridEditorGui extends JFrame {
 			shiftUp.setToolTipText("shift all nodes one node up");
 			buttonPanel.add(shiftUp);
 					
-					
+			// Add fill grid button
+			fillGrid = new JButton("Fill Full Grid");
+			fillGrid.setToolTipText("fill entire grid with selected color");
+			buttonPanel.add(fillGrid);
+		
+			// Add directional left button
+			shiftLeft = new JButton();
+			try 
+			{
+				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-left.png"));
+				shiftLeft.setIcon(new ImageIcon(img));
+			}catch (Exception ex) {
+				System.out.println(ex);
+			}
+			shiftLeft.setToolTipText("shift all nodes one node left");
+			buttonPanel.add(shiftLeft);
+			
+			
 			// Add directional down button
 			shiftDown = new JButton();
 			try 
@@ -235,17 +259,7 @@ public class GridEditorGui extends JFrame {
 			shiftDown.setToolTipText("shift all nodes one node down");
 			buttonPanel.add(shiftDown);
 			
-			// Add directional left button
-			shiftLeft = new JButton();
-			try 
-			{
-				Image img = ImageIO.read(getClass().getResource("/gridEditor/resources/icon-arrow-left.png"));
-				shiftLeft.setIcon(new ImageIcon(img));
-			}catch (Exception ex) {
-				System.out.println(ex);
-			}
-			shiftLeft.setToolTipText("shift all nodes one node left");
-			buttonPanel.add(shiftLeft);
+			
 					
 					
 			// Add directional right button
@@ -259,6 +273,8 @@ public class GridEditorGui extends JFrame {
 			}  
 			shiftRight.setToolTipText("shift all nodes one node right");
 			buttonPanel.add(shiftRight);
+			
+			
 			
 			AddTimeEditingGUI(gridConfigurePanel);
 			
@@ -291,18 +307,21 @@ public class GridEditorGui extends JFrame {
 			
 			// Add a "+" Button to add a frame (Added here as button should never move or change)
 			frameActionPanel = new JPanel();
+			
 			frameEditPanel.add(frameActionPanel);
+			/*
 			addFrame = new JButton("Add Frame (+)");
 			addFrame.setToolTipText("add blank frame to end of show");
 			frameActionPanel.add(addFrame);
+			*/
 			frameActionPanel.add(new JButton("Play"));
 			frameActionPanel.add(new JButton("Stop"));
 			frameActionPanel.add(new JButton("Pause"));
 	
-			createAddFrameEventHandler(frameActionPanel.getComponent(0));
-			createPlayEventHandler(frameActionPanel.getComponent(1));
-			createStopEventHandler(frameActionPanel.getComponent(2));
-			createPauseEventHandler(frameActionPanel.getComponent(3));
+			//createAddFrameEventHandler(frameActionPanel.getComponent(0));
+			createPlayEventHandler(frameActionPanel.getComponent(0));
+			createStopEventHandler(frameActionPanel.getComponent(1));
+			createPauseEventHandler(frameActionPanel.getComponent(2));
 
 		}
 		initGrid();
@@ -767,10 +786,37 @@ public class GridEditorGui extends JFrame {
 				createNodeButtonEventHandlers();
 			}
 		});
-		//node buttons
-		createNodeButtonEventHandlers();
-	
+		
+		
+		fillGrid.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+			//Fill entire grid with the selected color
+				for(int r = 0; r < gridRows; r++){
+					for(int c = 0; c < gridCols; c++){
+					
+						color = colorChooser.getColor();
+					
+						btnGrid[r][c].setOpaque(true);
+						btnGrid[r][c].setBackground(color);
+						frames.get(currentFrame).setNodeColor(r, c, color);
+					}
+				}
+				// redraw the grid
+				initGrid();
+				createNodeButtonEventHandlers();
+			}
+		});
+		
+		addFrame.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+			//Fill entire grid with the selected color
+			addFrame(popup.getFrameNumber(), false, FRAME_AFTER);
+			}	
+		});
 	}
+	
 	/////////////////////////////////////////////////////
 	// Method for SaveAs and Save
 	// Opens up dialog box for saving a file
