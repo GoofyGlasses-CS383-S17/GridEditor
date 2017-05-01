@@ -666,8 +666,7 @@ public class GridEditorGui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Check if current file is "saved" before exit
-				WindowEvent e1 = new WindowEvent(null, 0);
-				grid_windowClosing(e1);
+				grid_windowClosing(null);
 			}
 		});
 		
