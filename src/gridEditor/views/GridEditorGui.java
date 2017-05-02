@@ -219,11 +219,11 @@ public class GridEditorGui extends JFrame {
 			buttonPanel.setLayout(new GridLayout(3,3));
 			buttonPanel.setPreferredSize(new Dimension(90,120));
 			
+			
+			// Show control buttons
 			buttonPanel.add(new JButton("Play"));
 			buttonPanel.add(new JButton("Stop"));
 			buttonPanel.add(new JButton("Pause"));
-	
-			//createAddFrameEventHandler(frameActionPanel.getComponent(0));
 			createPlayEventHandler(buttonPanel.getComponent(0));
 			createStopEventHandler(buttonPanel.getComponent(1));
 			createPauseEventHandler(buttonPanel.getComponent(2));
