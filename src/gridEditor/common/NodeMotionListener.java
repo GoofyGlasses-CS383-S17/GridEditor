@@ -3,12 +3,13 @@ package gridEditor.common;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class NodeActionListener implements MouseListener{
+public class NodeMotionListener implements MouseMotionListener{
 	private int row;
 	private int col;
 	
-	public NodeActionListener(int r, int c){
+	public NodeMotionListener(int r, int c){
 		setRow(r);
 		setCol(c);
 	}
@@ -27,34 +28,14 @@ public class NodeActionListener implements MouseListener{
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
 }

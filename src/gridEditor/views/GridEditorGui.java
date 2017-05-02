@@ -1239,16 +1239,32 @@ public class GridEditorGui extends JFrame {
 					public void mousePressed(MouseEvent e) {
 						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 						
-						// redraw the grid
-						
-						createNodeButtonEventHandlers();
-						
 					}
 
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+						
+					}
 					
 				});
 				
-			
+				btnGrid[r][c].addMouseMotionListener(new NodeMotionListener(r, c){
+					
+					@Override
+					public void mouseMoved(MouseEvent arg1) {
+						
+						if(arg1.isControlDown())
+						{
+							color = colorChooser.getColor();
+							btnGrid[this.getRow()][this.getCol()].setOpaque(true);
+							btnGrid[this.getRow()][this.getCol()].setBackground(color);
+							frames.get(currentFrame).setNodeColor(this.getRow(), this.getCol(), color);
+						}
+					}
+					
+				});
+				
 			}
 		}
 	}
