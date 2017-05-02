@@ -137,7 +137,7 @@ public class GridEditorGui extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
-		setBounds(100, 100, 1000, 800);
+		setBounds(100, 100, 1200, 800);
 		
 		contentPane = new JPanel();
 		gridPanel = new JPanel();
