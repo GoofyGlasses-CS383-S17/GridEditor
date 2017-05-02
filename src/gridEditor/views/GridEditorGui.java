@@ -1239,13 +1239,13 @@ public class GridEditorGui extends JFrame {
 					public void mousePressed(MouseEvent e) {
 						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 						
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						btnGrid[this.getRow()][this.getCol()].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+						// redraw the grid
+						
+						createNodeButtonEventHandlers();
 						
 					}
+
+					
 				});
 				
 			
