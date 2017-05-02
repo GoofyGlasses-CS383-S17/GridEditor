@@ -137,7 +137,7 @@ public class GridEditorGui extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
-		setBounds(100, 100, 1000, 800);
+		setBounds(100, 100, 1200, 800);
 		
 		contentPane = new JPanel();
 		gridPanel = new JPanel();
@@ -216,8 +216,18 @@ public class GridEditorGui extends JFrame {
 			// Add direction buttons Panel to right of Grid Panel
 			contentPane.add(gridConfigurePanel, BorderLayout.EAST);
 			buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridLayout(2,3));
-			buttonPanel.setPreferredSize(new Dimension(60,60));
+			buttonPanel.setLayout(new GridLayout(3,3));
+			buttonPanel.setPreferredSize(new Dimension(90,120));
+			
+			
+			// Show control buttons
+			buttonPanel.add(new JButton("Play"));
+			buttonPanel.add(new JButton("Stop"));
+			buttonPanel.add(new JButton("Pause"));
+			createPlayEventHandler(buttonPanel.getComponent(0));
+			createStopEventHandler(buttonPanel.getComponent(1));
+			createPauseEventHandler(buttonPanel.getComponent(2));
+			
 			
 			// Add addFrame button
 			addFrame = new JButton("Add Frame (+)");
@@ -310,25 +320,25 @@ public class GridEditorGui extends JFrame {
 			gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
 			
 						// Add Frame Edit Panel
-			contentPane.add(frameEditPanel, BorderLayout.NORTH);
-			
-			// Add a "+" Button to add a frame (Added here as button should never move or change)
-			frameActionPanel = new JPanel();
-			
-			frameEditPanel.add(frameActionPanel);
-			/*
-			addFrame = new JButton("Add Frame (+)");
-			addFrame.setToolTipText("add blank frame to end of show");
-			frameActionPanel.add(addFrame);
-			*/
-			frameActionPanel.add(new JButton("Play"));
-			frameActionPanel.add(new JButton("Stop"));
-			frameActionPanel.add(new JButton("Pause"));
-	
-			//createAddFrameEventHandler(frameActionPanel.getComponent(0));
-			createPlayEventHandler(frameActionPanel.getComponent(0));
-			createStopEventHandler(frameActionPanel.getComponent(1));
-			createPauseEventHandler(frameActionPanel.getComponent(2));
+//			contentPane.add(frameEditPanel, BorderLayout.NORTH);
+//			
+//			// Add a "+" Button to add a frame (Added here as button should never move or change)
+//			frameActionPanel = new JPanel();
+//			
+//			frameEditPanel.add(frameActionPanel);
+//			/*
+//			addFrame = new JButton("Add Frame (+)");
+//			addFrame.setToolTipText("add blank frame to end of show");
+//			frameActionPanel.add(addFrame);
+//			*/
+//			frameActionPanel.add(new JButton("Play"));
+//			frameActionPanel.add(new JButton("Stop"));
+//			frameActionPanel.add(new JButton("Pause"));
+//	
+//			//createAddFrameEventHandler(frameActionPanel.getComponent(0));
+//			createPlayEventHandler(frameActionPanel.getComponent(0));
+//			createStopEventHandler(frameActionPanel.getComponent(1));
+//			createPauseEventHandler(frameActionPanel.getComponent(2));
 			
 		}
 		// Listener for close on x without saving
