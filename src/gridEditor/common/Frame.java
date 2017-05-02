@@ -35,10 +35,10 @@ public class Frame {
 		this.nodes=nodes;
 	}
 	public Frame clone(){
-		Node[][] clonedNode = new Node[getWidth()][getHeight()];
+		Node[][] clonedNode = new Node[getHeight()][getWidth()];
 		Frame clonedFrame = new Frame();
-		for(int i=0; i<getWidth(); i++) {
-			for(int j=0; j<getHeight(); j++) {
+		for(int i=0; i<getHeight(); i++) {
+			for(int j=0; j<getWidth(); j++) {
 				clonedNode[i][j] = nodes[i][j];
 			}
 		}
