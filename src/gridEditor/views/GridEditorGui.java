@@ -348,6 +348,7 @@ public class GridEditorGui extends JFrame {
 			}
 		});
 		initGrid();
+		createNodeButtonEventHandlers();
 		
 	}
 	
