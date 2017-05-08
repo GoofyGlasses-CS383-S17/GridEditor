@@ -1288,7 +1288,6 @@ public class GridEditorGui extends JFrame {
 	private void fillNodes(Color color, int minRow, int minCol, int maxRow, int maxCol){
 		for(int i=minRow;i<=maxRow;i++){
 			for(int j=minCol;j<=maxCol;j++){
-				color = colorChooser.getColor();
 				btnGrid[i][j].setOpaque(true);
 				btnGrid[i][j].setBackground(color);
 				frames.get(currentFrame).setNodeColor(i, j, color);
