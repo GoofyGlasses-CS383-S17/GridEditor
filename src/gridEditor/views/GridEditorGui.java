@@ -8,9 +8,9 @@ import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
+//import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.colorchooser.ColorSelectionModel;
+//import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -18,14 +18,14 @@ import java.awt.Toolkit;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.PopupMenu;
-import java.awt.MenuItem;
+//import java.awt.PopupMenu;
+//import java.awt.MenuItem;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
-import files.WriteFile;
+//import files.WriteFile;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -33,13 +33,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 import gridEditor.common.*;
-import javafx.scene.control.ColorPicker;
+//import javafx.scene.control.ColorPicker;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.colorchooser.*;
 
 
+@SuppressWarnings("serial")
 public class GridEditorGui extends JFrame {
 	int FRAME_AFTER=0;
 	int FRAME_BEFORE=-1;
@@ -57,9 +58,9 @@ public class GridEditorGui extends JFrame {
 	private JMenuItem mntmSaveAs;
 	private JMenuItem mntmExit;
 	private JMenuItem mntmGridSize;
-	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
-	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
-	private JMenuItem mntmAbout;
+//	private JCheckBoxMenuItem chckbxmntmSingleNodeMode;
+//	private JCheckBoxMenuItem chckbxmntmMultiNodeMode;
+//	private JMenuItem mntmAbout;
 	private JButton addFrame;
 	private JButton shiftUp; 
 	private JButton shiftDown;
@@ -78,7 +79,7 @@ public class GridEditorGui extends JFrame {
 	private int currentFrame=0;
 	private JPanel gridConfigurePanel;
 	private JPanel previewPanel;
-	private JPanel frameActionPanel;
+//	private JPanel frameActionPanel;
 	private JPanel frameEditPanel;
 	private JPanel colorPanel;
 	private JPanel buttonPanel;
@@ -87,7 +88,7 @@ public class GridEditorGui extends JFrame {
 	private JScrollPane scrollPane;
 	private AnimationStatus animationStatus = AnimationStatus.STOPPED;
 	private int revertFrame;
-	private int defaultFrameDuration = 100;
+//	private int defaultFrameDuration = 100;
 	private int lastPressedRow=-1, lastPressedCol=-1;
 
 	/**
@@ -135,9 +136,9 @@ public class GridEditorGui extends JFrame {
 		}
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GridEditorGui.class.getResource("/gridEditor/resources/glassesIcon_626.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
-		// Quick-Fix for now, the "+" and "-" Frame Button display over the rest of graph if too small
-		setBounds(100, 100, 1200, 800);
+
+
+		setBounds(100, 100, 1200, 800); // default size of frame
 		
 		contentPane = new JPanel();
 		gridPanel = new JPanel();
@@ -181,27 +182,8 @@ public class GridEditorGui extends JFrame {
 		mntmExit = new JMenuItem("Exit");
 		mnFile.add(mntmExit);
 		
-		JMenu mnEdit = new JMenu("Edit");
-		menuBar.add(mnEdit);
-		
+		// Used for Grid Size Event Handler
 		mntmGridSize = new JMenuItem("Grid Size");
-		mnEdit.add(mntmGridSize);
-		
-		chckbxmntmSingleNodeMode = new JCheckBoxMenuItem("Single Node Mode");
-		mnEdit.add(chckbxmntmSingleNodeMode);
-		
-		chckbxmntmMultiNodeMode = new JCheckBoxMenuItem("Multi Node Mode");
-		mnEdit.add(chckbxmntmMultiNodeMode);
-		
-		JMenu mnWindow = new JMenu("Window");
-		menuBar.add(mnWindow);
-		
-		JMenu mnHelp = new JMenu("Help");
-		menuBar.add(mnHelp);
-		
-		mntmAbout = new JMenuItem("About");
-		mnHelp.add(mntmAbout);
-		
 			
 		if(frames==null){
 			frames=new ArrayList<Frame>();
@@ -230,7 +212,7 @@ public class GridEditorGui extends JFrame {
 			
 			
 			// Add addFrame button
-			addFrame = new JButton("Add Frame (+)");
+			addFrame = new JButton("Add Frame");
 			addFrame.setToolTipText("add blank frame to end of show");
 			buttonPanel.add(addFrame);
 			
@@ -275,10 +257,8 @@ public class GridEditorGui extends JFrame {
 			}  
 			shiftDown.setToolTipText("shift all nodes one node down");
 			buttonPanel.add(shiftDown);
-			
-			
 					
-					
+			
 			// Add directional right button
 			shiftRight = new JButton();
 			try 
@@ -290,7 +270,6 @@ public class GridEditorGui extends JFrame {
 			}  
 			shiftRight.setToolTipText("shift all nodes one node right");
 			buttonPanel.add(shiftRight);
-			
 			
 			
 			AddTimeEditingGUI(gridConfigurePanel);
@@ -318,28 +297,7 @@ public class GridEditorGui extends JFrame {
 			}
 			colorPanel.add(colorChooser,BorderLayout.CENTER);
 			gridConfigurePanel.add(colorPanel,BorderLayout.CENTER);
-			
-						// Add Frame Edit Panel
-//			contentPane.add(frameEditPanel, BorderLayout.NORTH);
-//			
-//			// Add a "+" Button to add a frame (Added here as button should never move or change)
-//			frameActionPanel = new JPanel();
-//			
-//			frameEditPanel.add(frameActionPanel);
-//			/*
-//			addFrame = new JButton("Add Frame (+)");
-//			addFrame.setToolTipText("add blank frame to end of show");
-//			frameActionPanel.add(addFrame);
-//			*/
-//			frameActionPanel.add(new JButton("Play"));
-//			frameActionPanel.add(new JButton("Stop"));
-//			frameActionPanel.add(new JButton("Pause"));
-//	
-//			//createAddFrameEventHandler(frameActionPanel.getComponent(0));
-//			createPlayEventHandler(frameActionPanel.getComponent(0));
-//			createStopEventHandler(frameActionPanel.getComponent(1));
-//			createPauseEventHandler(frameActionPanel.getComponent(2));
-			
+
 		}
 		// Listener for close on x without saving
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -406,7 +364,7 @@ public class GridEditorGui extends JFrame {
 		boolean validInput = EnsureStringIsInt(startTimeField);
 
 		if(validInput == true){
-			int newStartTime = newStartTime = Integer.parseInt(startTimeField.getText());
+			int newStartTime = Integer.parseInt(startTimeField.getText());
 			
 			int previousStartTime = -1;
 			int nextStartTime = 0;
@@ -546,7 +504,7 @@ public class GridEditorGui extends JFrame {
 	// events.
 	////////////////////////////////////////////////////
 	private void createEvents() {
-		// TODO Double check to make sure all event handlers for the gui are handled
+
 		
 		/////////////////////////////////////////////////
 		// Event Handlers for the "File" Menu
@@ -612,7 +570,7 @@ public class GridEditorGui extends JFrame {
 						File tanFile = openFileChooser.getSelectedFile();
 						currentFile=tanFile.getAbsolutePath();
 						setTitle("GoofyGlasses Editor " + currentFile);
-						//System.out.println("Selected File: " + currentFile);
+
 						//Loads Frames from file into temp ArrayList
 						//If temp is empty do nothing
 						frames = TanFile.readFile(tanFile);
@@ -632,7 +590,7 @@ public class GridEditorGui extends JFrame {
 					}
 				}
 				else {
-					//TODO Add message to inform no file was selected
+
 					System.out.println("No file selected");
 				}
 			}
@@ -688,7 +646,6 @@ public class GridEditorGui extends JFrame {
 		mntmGridSize.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		// TODO code to adjust grid size		
 			}
 		});
 		/////////////////////////////////////////////////////////
@@ -1000,7 +957,6 @@ public class GridEditorGui extends JFrame {
 		SetTimeFields();
 		
 		contentPane.revalidate();
-		//TODO: repainting is probably not the best solution. Improve if/when possible
 		contentPane.repaint();
 	}
 
@@ -1200,6 +1156,7 @@ public class GridEditorGui extends JFrame {
 	// This method creates event handler for the add 
 	// frame button
 	/////////////////////////////////////////////////////
+	@SuppressWarnings("unused")
 	private void createAddFrameEventHandler(Component addFrameButton ){
 		addFrameButton.addMouseListener(new FrameButtonActionListener(-1){
 			@Override
@@ -1282,13 +1239,13 @@ public class GridEditorGui extends JFrame {
 		}
 	}
 	
-	//TODO: Call this method to set background color
 	//this method fills nodes that were shift selected
 	private void fillNodes(Color color, int minRow, int minCol, int maxRow, int maxCol){
 		for(int i=minRow;i<=maxRow;i++){
 			for(int j=minCol;j<=maxCol;j++){
 				color = colorChooser.getColor();
 				btnGrid[i][j].setOpaque(true);
+				btnGrid[i][j].setBackground(color);
 				btnGrid[i][j].setBackground(color);
 				frames.get(currentFrame).setNodeColor(i, j, color);
 				
@@ -1303,16 +1260,9 @@ public class GridEditorGui extends JFrame {
 	// button and sets its color
 	/////////////////////////////////////////////////////
 	private void createNodeButton(int row, int column){
-		//btnGrid[row][column] = new JLabel("R:" + row + " " + "C:" + column);
 		btnGrid[row][column] = new JLabel();
 		btnGrid[row][column].setHorizontalAlignment(SwingConstants.CENTER);
 		btnGrid[row][column].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-			
-		/* Supposedly setPreferredSize is bad practice, and this seems to not do anything anyways
-		 * looking at another solution(SethF) 
-		 * This is connected to the GridLayout issue @line ~295 (SethF)
-		 */ 
-//		btnGrid[row][column].setPreferredSize(new Dimension(gridCellWidth, gridCellHeight));
 		
 		if(frames != null){
 			Color nodeColor = frames.get(currentFrame).getNodeColor(row, column);
