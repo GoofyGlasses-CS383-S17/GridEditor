@@ -620,7 +620,11 @@ public class GridEditorGui extends JFrame {
 						if(frames.size()==0){
 							return;
 						}
-						
+						//clone frames to catch changes on exit
+						savedFrames = new ArrayList<Frame>();
+						for (int i=0; i<frames.size(); i++) {
+							savedFrames.add((frames.get(i)).clone());
+						}
 						gridRows=frames.get(0).getHeight();
 						gridCols=frames.get(0).getWidth();
 						initGrid();
@@ -887,42 +891,47 @@ public class GridEditorGui extends JFrame {
 	// last save before closing.
 	/////////////////////////////////////////////////////
 	private void grid_windowClosing(WindowEvent e) {
-			if(frameChanged()) {
-				//ask user if they want to save before exit
-				int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION);
-				if(result == JOptionPane.YES_OPTION) {
-					// check for file name, otherwise open save as dialog
-					if(currentFile != null) {
-						try {
-							File tanSaveFile = openFileChooser.getSelectedFile();
-							if(!tanSaveFile.getName().endsWith(".tan")) {
-								String path = tanSaveFile.getAbsolutePath() + ".tan";
-								setTitle("GoofyGlasses Editor " + path);
-								File newSaveFile = new File(path);
-								TanFile.writeFile(newSaveFile, frames);
-							}
-							else {
-								TanFile.writeFile(tanSaveFile, frames);
-								currentFile = tanSaveFile.getAbsolutePath();
-								setTitle("GoofyGlasses Editor " + currentFile);
-							}
+		if(frameChanged()) {
+			//ask user if they want to save before exit
+			int result = JOptionPane.showConfirmDialog(null, "Do you want to save before exit?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION);
+			if(result == JOptionPane.YES_OPTION) {
+				// check for file name, otherwise open save as dialog
+				if(currentFile != null) {
+					try {
+						File tanSaveFile = openFileChooser.getSelectedFile();
+						if(!tanSaveFile.getName().endsWith(".tan")) {
+							String path = tanSaveFile.getAbsolutePath() + ".tan";
+							setTitle("GoofyGlasses Editor " + path);
+							File newSaveFile = new File(path);
+							TanFile.writeFile(newSaveFile, frames);
 						}
-						catch(Exception e1) {
-							saveAsDialog(mntmSaveAs);
+						else {
+							TanFile.writeFile(tanSaveFile, frames);
+							currentFile = tanSaveFile.getAbsolutePath();
+							setTitle("GoofyGlasses Editor " + currentFile);
 						}
 					}
-					else {
+					catch(Exception e1) {
 						saveAsDialog(mntmSaveAs);
 					}
+					System.exit(0);
 				}
-				else if(result == JOptionPane.CANCEL_OPTION) {
-					return;
-				}
-				else if(result == JOptionPane.NO_OPTION){
+				else {
+					saveAsDialog(mntmSaveAs);
 					System.exit(0);
 				}
 			}
-			
+			else if(result == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
+			else if(result == JOptionPane.NO_OPTION){
+				System.exit(0);
+			}
+		}
+		else {
+			System.exit(0);
+		}
+
 	};
 	/////////////////////////////////////////////////////
 	// Method checks for frame differences since last save
