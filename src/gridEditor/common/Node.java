@@ -15,6 +15,24 @@ public class Node {
 	public Node(int red, int green, int blue){
 		color=new Color(red, green, blue);
 	}
+	@Override
+	public Node clone(){
+		Node clonedNode = new Node();
+		Color clonedColor = new Color(0,0,0);
+		clonedColor = getColor();
+		clonedNode.setColor(clonedColor);
+		return clonedNode;
+	}
+	public boolean equals(Node c) {
+		if(getColor().getRed() == c.getColor().getRed()) {
+			if(getColor().getBlue() == c.getColor().getBlue()) {
+				if(getColor().getGreen() == c.getColor().getGreen()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	public void setColor(Color color){
 		this.color=color;
 	}
