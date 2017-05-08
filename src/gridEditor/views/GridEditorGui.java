@@ -181,7 +181,7 @@ public class GridEditorGui extends JFrame {
 		mntmExit = new JMenuItem("Exit");
 		mnFile.add(mntmExit);
 		
-		JMenu mnEdit = new JMenu("Edit");
+		/*JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		
 		mntmGridSize = new JMenuItem("Grid Size");
@@ -200,7 +200,7 @@ public class GridEditorGui extends JFrame {
 		menuBar.add(mnHelp);
 		
 		mntmAbout = new JMenuItem("About");
-		mnHelp.add(mntmAbout);
+		mnHelp.add(mntmAbout);*/
 		
 			
 		if(frames==null){
@@ -685,12 +685,12 @@ public class GridEditorGui extends JFrame {
 		////////////////////////////////////////////////////////
 		
 		// Grid Size Event Handler
-		mntmGridSize.addActionListener(new ActionListener() {
+		/*mntmGridSize.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 		// TODO code to adjust grid size		
 			}
-		});
+		});*/
 		/////////////////////////////////////////////////////////
 		// Event Handlers for the cell shifting buttons
 		////////////////////////////////////////////////////////
